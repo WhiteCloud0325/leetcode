@@ -1,0 +1,68 @@
+
+Given a string, sort it in decreasing order based on the frequency of characters.
+
+Example 1:
+
+Input:
+"tree"
+
+Output:
+"eert"
+
+Explanation:
+'e' appears twice while 'r' and 't' both appear once.
+So 'e' must appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.
+Example 2:
+
+Input:
+"cccaaa"
+
+Output:
+"cccaaa"
+
+Explanation:
+Both 'c' and 'a' appear three times, so "aaaccc" is also a valid answer.
+Note that "cacaca" is incorrect, as the same characters must be together.
+Example 3:
+
+Input:
+"Aabb"
+
+Output:
+"bbAa"
+
+Explanation:
+"bbaA" is also a valid answer, but "Aabb" is incorrect.
+Note that 'A' and 'a' are treated as two different characters.
+
+
+
+class Solution {
+public:
+    string frequencySort(string s) {
+        unordered_map<char,int> charnum;
+        int n=s.length();
+        for(int i=0;i<n;i++){
+            charnum[s[i]]++;
+        }
+        string res;
+        struct comp{
+            bool operator()(pair<int,char> &a,pair<int,char> &b){
+                if(a.first<b.first) return true;
+                else return false;
+            }
+        };
+        priority_queue<pair<int,char>,vector<pair<int,char>>,comp> pq;
+        for(auto it=charnum.begin();it!=charnum.end();it++){
+            pq.push(make_pair(it->second,it->first));
+        }
+        while(!pq.empty()){
+            char temp=pq.top().second;
+            int tempnum=pq.top().first;
+            for(int i=0;i<tempnum;i++)
+                res.push_back(temp);
+            pq.pop();
+        }
+        return res;
+    }
+};
