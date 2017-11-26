@@ -1,0 +1,48 @@
+Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+
+Example:
+
+Input: "babad"
+
+Output: "bab"
+
+Note: "aba" is also a valid answer.
+Example:
+
+Input: "cbbd"
+
+Output: "bb"
+
+方法一：将字符串反转取两个字符串最长公共子字符串，但会存在问题：例如S=”abacdfgdcaba”，S'=“abacdgfdcaba”，The longest common substring between SS and S'S
+is \textrm{''abacd''}”abacd”，所以要判断最长公共字符子串是否是回文字符串
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string rs;
+        int n=s.length();
+        for(int i=n-1;i>=0;i--)
+            rs.push_back(s[i]);
+        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+        int pos=0,maxlen=0,respos=0,reslen=0;
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=n;j++){
+                if(s[i-1]==rs[j-1]) {
+                    dp[i][j]=dp[i-1][j-1]+1;
+                    if(maxlen<=dp[i][j]){
+                        maxlen=dp[i][j];
+                        pos=i-1;
+                        if(pos+j-maxlen==n-1){
+                            respos=pos;
+                            reslen=maxlen;
+                        }
+                    }
+                }
+                else{
+                    dp[i][j]=0;
+                }
+            }
+        }
+        return s.substr(respos-reslen+1,reslen);
+    }
+};
