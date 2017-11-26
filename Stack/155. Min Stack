@@ -1,0 +1,115 @@
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+Example:
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --> Returns -3.
+minStack.pop();
+minStack.top();      --> Returns 0.
+minStack.getMin();   --> Returns -2.
+
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        
+    }
+    
+    void push(int x) {
+        mystack_.push(x);
+        if(mystack_.size()==1)
+            minstack_.push(x);
+        else{
+            if(mystack_.top()<=minstack_.top())
+                minstack_.push(x);
+        }
+    }
+    
+    void pop() {
+        if(mystack_.top()==minstack_.top())
+            minstack_.pop();
+        mystack_.pop();
+    }
+    
+    int top() {
+        return mystack_.top();
+    }
+    
+    int getMin() {
+        return minstack_.top();
+    }
+private:
+    stack<int> mystack_;
+    stack<int> minstack_;
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(x);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+
+方法二：
+空间复杂度为O(1):用minNum表示当前栈的最小值，如果进栈的数x比minNum小则入栈为x-minNum,minNum为x,如果入栈数x比minNum大则入栈为x-minNum，
+出栈时，如果top>=0的数，说明栈顶数是个大于当前minNum的数则，出栈x=top+minNum，如果top<0,说明top是当前minNum所在位置，top-minNum是top出栈后的当前栈的最小值。
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        minNum=0;
+    }
+    
+    void push(int x) {
+        if(mystack.empty()){
+            minNum=x;
+            mystack.push(x);
+        }
+        else{
+            if(x<minNum){
+                mystack.push(x-minNum);
+                minNum=x;
+            }
+            else{
+                mystack.push(x-minNum);
+            }
+        }
+    }
+    
+    void pop() {
+        if(mystack.size()==1){
+            mystack.pop();
+            minNum=0;
+        }
+        else{
+            if(mystack.top()<0){
+                minNum-=mystack.top();
+            }
+            mystack.pop();
+        }
+    }
+    
+    int top() {
+        if(mystack.size()==1)
+            return mystack.top();
+        else{
+            if(mystack.top()<0) return minNum;
+            else return mystack.top()+minNum;
+        }
+    }
+    
+    int getMin() {
+        return minNum;
+    }
+private:
+    stack<long> mystack;
+    long minNum;
+};
