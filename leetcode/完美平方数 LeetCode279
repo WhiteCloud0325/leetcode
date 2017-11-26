@@ -1,0 +1,48 @@
+给一个正整数 n，写一个函数找到若干个完全平方数（比如 1，4，9，...）使得他们的和等于 n。要求为你需要让平方数的个数最少，输出需要的最少的平方数的个数。
+
+格式：
+
+输入每一行输入一个 整数 n，输出每一行输出需要最少的平方数的个数。
+样例输入
+
+n = 12
+n = 13
+
+样例输出
+
+3  
+//12 = 4 + 4 + 4
+2 
+//13 = 4 + 9
+
+方法：使用BFS，加贪婪算法，从最大的平法数开始算
+例如12，第一层：12-9=3，12-4=8，12-1=11
+       第二层：3延伸节点，8延伸节点，11延伸节点，直到为0为最短路径
+
+  int numSquares(int n) {
+        int minPath = 0;
+        queue<int> fifoqueue;
+        int sqrtNum = sqrt(n);
+        int cur = 0, count = 1;
+        fifoqueue.push(n);
+        while (1) {
+            ++minPath;
+            cur= count;
+            count = 0;
+            while (cur--) {
+                int tempNum = fifoqueue.front();
+                fifoqueue.pop();
+                int sqrtNum = sqrt(tempNum);
+                for (int i = sqrtNum; i >= 1; i--) {
+                    int temp = tempNum - i*i;
+                    if (temp < 0) continue;
+                    else if (temp == 0) return minPath;
+                    else {
+                        count++;
+                        fifoqueue.push(temp);
+                    }
+                }
+
+            }
+        }
+    }
