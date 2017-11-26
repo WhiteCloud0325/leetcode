@@ -1,0 +1,86 @@
+Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
+
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its bottom-up level order traversal as:
+[
+  [15,7],
+  [9,20],
+  [3]
+]
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> res;
+        if(!root) return res;
+        vector<int> rowres;
+        queue<TreeNode*> rowqueue,tempqueue;
+        rowqueue.push(root);
+        while(1){
+            while(!rowqueue.empty()){
+                rowres.push_back(rowqueue.front()->val);
+                if(rowqueue.front()->left) tempqueue.push(rowqueue.front()->left);
+                if(rowqueue.front()->right) tempqueue.push(rowqueue.front()->right);
+                rowqueue.pop();
+            }
+            res.insert(res.begin(),rowres);
+            if(tempqueue.empty()) break;
+            while(!tempqueue.empty()){
+                rowqueue.push(tempqueue.front());
+                tempqueue.pop();
+            }
+            rowres.clear();
+        }
+        return res;
+    }
+    
+};
+
+
+
+
+
+
+
+
+
+
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> res;
+        if(!root) return res;
+        vector<int> rowres;
+        queue<TreeNode*> rowqueue;
+        rowqueue.push(root);
+        while(!rowqueue.empty()){
+            int levelNum=rowqueue.size();
+            for(int i=0;i<levelNum;i++){
+                rowres.push_back(rowqueue.front()->val);
+                if(rowqueue.front()->left) rowqueue.push(rowqueue.front()->left);
+                if(rowqueue.front()->right) rowqueue.push(rowqueue.front()->right);
+                rowqueue.pop();
+            }
+            res.insert(res.begin(),rowres);
+            rowres.clear();
+        }   
+            
+        return res;
+    }
+    
+};
