@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int findLongestChain(vector<vector<int>>& pairs) {
+        sort(pairs.begin(),pairs.end(),myComp);
+        if(pairs.empty())
+            return 0;
+        int count=1;
+        pairs.push_back({INT_MAX,INT_MAX});
+        count+=numLongestChain(pairs,0);
+        return count;
+        
+    }
+    static bool myComp(vector<int> a,vector<int>b){
+        if(a[1]<b[1])
+            return true;
+        else
+            return false;
+    }
+    int numLongestChain(vector<vector<int>>& pairs,int i){
+        int m=i+1;
+        while(m<pairs.size()-1&&pairs[m][0]<=pairs[i][1])
+            m++;
+        if(m<pairs.size()-1)
+            return 1+numLongestChain(pairs,m);
+        else
+            return 0;
+    }
+};

@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int row=triangle.size();
+        if(row==0)
+            return 0;
+        vector<int> dp(row,0);
+        dp[0]=triangle[0][0];
+        for(int i=1;i<row;i++){
+            dp[i]=dp[i-1]+triangle[i][i];
+            for(int j=i-1;j>0;j--){
+                dp[j]=min(dp[j],dp[j-1])+triangle[i][j];
+            }
+            dp[0]=dp[0]+triangle[i][0];
+        }
+        int minsum=INT_MAX;
+        for(int i=0;i<row;i++)
+            minsum=min(minsum,dp[i]);
+        return minsum;
+    }
+};

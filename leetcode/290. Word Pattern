@@ -1,0 +1,44 @@
+Given a pattern and a string str, find if str follows the same pattern.
+
+Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in str.
+
+Examples:
+pattern = "abba", str = "dog cat cat dog" should return true.
+pattern = "abba", str = "dog cat cat fish" should return false.
+pattern = "aaaa", str = "dog cat cat dog" should return false.
+pattern = "abba", str = "dog dog dog dog" should return false.
+Notes:
+You may assume pattern contains only lowercase letters, and str contains lowercase letters separated by a single space.
+
+
+
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        map<char,string> chartostr;
+        map<string,char> strtochar;
+        vector<string> splitstr;
+        int i=0,j=0;
+        for(i=0;i<=str.length();i++){
+            if(str[i]==' '|| str[i]==0){
+                splitstr.push_back(str.substr(j,i-j));
+                j=i+1;
+            }
+        }
+        int m=pattern.length(),n=splitstr.size();
+        if(m!=n) return false;
+        for(i=0;i<n;i++){
+            map<char,string>::iterator it1=chartostr.find(pattern[i]);
+            map<string,char>::iterator it2=strtochar.find(splitstr[i]);
+            if(it1==chartostr.end()&&it2==strtochar.end()){
+                chartostr.insert(pair<char,string>(pattern[i],splitstr[i]));
+                strtochar.insert(pair<string,char>(splitstr[i],pattern[i]));
+            }
+            else if(it1!=chartostr.end()&&it2!=strtochar.end()){
+                if(it1->first!=it2->second || it1->second!=it2->first) return false;
+            }
+            else return false;
+        }
+        return true;
+    }
+};

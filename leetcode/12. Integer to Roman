@@ -1,0 +1,33 @@
+class Solution {
+public:
+    string intToRoman(int num) {
+        int t=(num/1000)%10,h=(num/100)%10,d=(num/10)%10,n=num%10;
+        string str;
+        setDigit(str,'M','?','?',t);
+        setDigit(str,'C','D','M',h);
+        setDigit(str,'X','L','C',d);
+        setDigit(str,'I','V','X',n);
+        return str;
+        
+    }
+    void setDigit(string &str,char a,char b,char c,int n){
+        if(n<4){
+            for(int i=0;i<n;i++)
+                str.push_back(a);
+        }
+        if(n==4){
+            str.push_back(a);
+            str.push_back(b);
+        }
+        if(n>=5 && n<=8){
+            str.push_back(b);
+            for(int i=5;i<n;i++)
+                str.push_back(a);
+        }
+        if(n==9){
+            str.push_back(a);
+            str.push_back(c);
+        }
+    }
+    
+};

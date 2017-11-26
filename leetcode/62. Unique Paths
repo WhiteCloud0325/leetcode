@@ -1,0 +1,13 @@
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        int a=min(m-1,n-1);
+        int b=max(m-1,n-1);
+        int c=m+n-2;
+        unsigned long value=1;
+        for(int i=1;i<=a;i++)
+            value=value*(c-i+1)/i;
+        return value;
+    }
+    
+};

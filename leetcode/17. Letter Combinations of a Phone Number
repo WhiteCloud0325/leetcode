@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> res;
+        const vector<string> sdigit = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        if(digits.empty())
+            return res;
+        vector<int> d;
+        for(int i=0;i<digits.length();i++){
+            int temp=digits[i]-'0';
+            if(temp>9||temp<2)
+                return res;
+            d.push_back(temp);
+        }
+        res.push_back("");
+        for(int i=0;i<d.size();i++){
+            vector<string> tmp;
+            int dig=d[i];
+             for(int j=0;j<sdigit[dig].length();j++)
+                for(int k=0;k<res.size();k++)
+                    tmp.push_back(res[k]+sdigit[dig][j]);
+            res.swap(tmp);
+        }
+        return res;
+    }
+};

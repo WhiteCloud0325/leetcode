@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        vector<int> temp;
+        solve(candidates,temp,target,0,0);
+        return result;
+    }
+    void solve(vector<int>& candidates,vector<int> temp,int target,int start,int sum){
+        if(start>=candidates.size())
+            return;
+        for(int i=start;i<candidates.size();i++){
+            if(i>start && candidates[i]==candidates[i-1])
+                continue;
+            temp.push_back(candidates[i]);
+            if((sum+candidates[i])==target){
+                result.push_back(vector<int>(temp));
+            }
+            if((sum+candidates[i])<target)
+                solve(candidates,temp,target,i+1,sum+candidates[i]);
+            temp.pop_back();
+        }
+    }
+    vector<vector<int>> result;
+};

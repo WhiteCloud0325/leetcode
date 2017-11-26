@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int islandPerimeter(vector<vector<int>>& grid) {
+        vector<vector<int>> cpgrid(grid);
+        int row=grid.size(),col=grid[0].size();
+        for(int i=0;i<row;i++){
+            auto it=cpgrid[i].begin();
+            cpgrid[i].insert(it,0);
+            cpgrid[i].push_back(0);
+        }
+        auto it=cpgrid.begin();
+        cpgrid.insert(it,vector<int>(col+2,0));
+        cpgrid.push_back(vector<int>(col+2,0));
+        vector<int> nums(5,0);
+        int cprow=cpgrid.size(),cpcol=cpgrid[0].size();
+        for(int i=1;i<cprow-1;i++){
+            for(int j=1;j<cpcol-1;j++){
+                if(cpgrid[i][j]){
+                    int temp=cpgrid[i-1][j]+cpgrid[i][j-1]+cpgrid[i+1][j]+cpgrid[i][j+1];
+                    nums[4-temp]++;
+                }
+            }
+        }
+        int res=0;
+        for(int i=0;i<nums.size();i++)
+            res+=i*nums[i];
+        return res;
+    }
+};

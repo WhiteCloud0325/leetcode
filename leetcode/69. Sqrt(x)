@@ -1,0 +1,29 @@
+Implement int sqrt(int x).
+Compute and return the square root of x.
+
+这个问题类似.二分查找返回key(可能有重复)最后一次出现的下标x
+初始条件 left=1，right=x/2
+保持的条件：
+    if mid^2>x,则mid...right的平方均大于x right=mid-1
+    else mid^2<=x ,则mid是left...mid最后一个小于等于sqrt（x）的数 left=mid
+结束条件：
+    while(left<right) right上一次循环为mid-1,而left<=mid,right>=left,所以退出循环时left==right
+    
+这里mid=left+1+(right-left)/2,这样 每次循环 left<mid<=right
+如果mid=left+(right-left)/2,则left<=mid<right,会陷入死循环
+class Solution {
+public:
+    int mySqrt(int x) {
+        int left=1,right=x/2,mid;
+        if(x==0) return 0;
+        if(x==1) return 1;
+        while(left<right){
+            mid=left+1+(right-left)/2;
+            if(mid>x/mid)
+                right=mid-1;
+            else
+                left=mid;
+        }
+        return left;
+    }
+};

@@ -1,0 +1,23 @@
+class Solution {
+public:
+     int getkth(vector<int>&A,int Astart,vector<int>&B,int Bstart,int k){
+        if(Astart>(int)(A.size()-1)) return B[Bstart+k-1];
+        if(Bstart>(int)(B.size()-1)) return A[Astart+k-1];    
+        if(k==1) return min(A[Astart],B[Bstart]);
+        int ak=INT_MAX,bk=INT_MAX;
+	    if (Astart + k/2 - 1 < A.size()) ak = A[Astart + k/2 - 1]; 
+	    if (Bstart + k/2 - 1 < B.size()) bk = B[Bstart + k/2 - 1];        
+	
+	    if (ak < bk) 
+	        return getkth(A, Astart + k/2, B, Bstart,       k - k/2);// Check: aRight + bLeft 
+	    else 
+	        return getkth(A, Astart,       B, Bstart + k/2, k - k/2);// Check: bRight + aLeft
+    }
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int n1=nums1.size(),n2=nums2.size();
+        int lmax=(n1+n2+1)/2;
+        int rmin=(n1+n2+2)/2;
+        return (getkth(nums1,0,nums2,0,lmax)+getkth(nums1,0,nums2,0,rmin))/2.0;
+    }
+   
+};

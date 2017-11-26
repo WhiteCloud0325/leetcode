@@ -1,0 +1,89 @@
+class Solution {
+public:
+    int romanToInt(string s) {
+        int num=0;
+        int i=0;
+        int t=0,h=0,d=0,n=0;
+        if(s[i]=='M'){
+            while(s[i]=='M'){
+                t++;
+                i++;
+            }
+        }
+        if(s[i]=='C'||s[i]=='D'){
+            if(s[i]=='C'){
+                if(s[i] != 0 &&s[i+1]=='D'){
+                    h=4;
+                    i+=2;
+                }
+                if(s[i] != 0 &&s[i+1]=='M'){
+                    h=9;
+                    i+=2;
+                }
+                while(s[i]=='C'){
+                    h++;
+                    i++;
+                }
+            }
+            if(s[i]=='D'){
+                h+=5;
+                i++;
+                while(s[i]=='C'){
+                    h++;
+                    i++;
+                }
+            }
+        }
+        if(s[i]=='X'||s[i]=='L'){
+            if(s[i]=='X'){
+                if(s[i] != 0 &&s[i+1]=='L'){
+                    d=4;
+                    i+=2;
+                }
+                if(s[i] != 0 &&s[i+1]=='C'){
+                    d=9;
+                    i+=2;
+                }
+                while(s[i]=='X'){
+                    d++;
+                    i++;
+                }
+            }
+            if(s[i]=='L'){
+                d+=5;
+                i++;
+                while(s[i]=='X'){
+                    d++;
+                    i++;
+                }
+            }
+        }
+        if(s[i]=='I'||s[i]=='V'){
+            if(s[i]=='I'){
+                if(s[i] != 0 &&s[i+1]=='V'){
+                    n=4;
+                    i+=2;
+                }
+                if(s[i] != 0 &&s[i+1]=='X'){
+                    n=9;
+                    i+=2;
+                }
+                while(s[i]=='I'){
+                    n++;
+                    i++;
+                }
+            }
+            if(s[i]=='V'){
+                n+=5;
+                i++;
+                while(s[i]=='I'){
+                    n++;
+                    i++;
+                }
+            }
+        }
+        return t*1000+h*100+d*10+n;
+          
+        
+    }
+};
