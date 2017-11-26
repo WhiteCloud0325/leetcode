@@ -1,0 +1,15 @@
+Given an integer, write a function to determine if it is a power of two.
+注意n<=0情况
+
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        if(n<=0) return false;
+        else{
+            n=abs(n);
+            if((n-1&n)==0)
+                return true;
+            else return false;
+        }
+    }
+};

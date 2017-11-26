@@ -1,0 +1,44 @@
+Given an integer, write an algorithm to convert it to hexadecimal. For negative integer, two’s complement method is used.
+
+Note:
+
+All letters in hexadecimal (a-f) must be in lowercase.
+The hexadecimal string must not contain extra leading 0s. If the number is zero, it is represented by a single zero character '0'; otherwise, the first character in the hexadecimal string will not be the zero character.
+The given number is guaranteed to fit within the range of a 32-bit signed integer.
+You must not use any method provided by the library which converts/formats the number to hex directly.
+
+
+class Solution {
+public:
+    string toHex(int num) {
+        unordered_map<int,char> inttoHex({{0,'0'},{1,'1'},{2,'2'},{3,'3'},{4,'4'},{5,'5'},{6,'6'},{7,'7'},
+                           {8,'8'},{9,'9'},{10,'a'},{11,'b'},{12,'c'},{13,'d'},{14,'e'},{15,'f'}});
+        if(num==0) return "0";
+        string res;
+        unsigned int unnum=(unsigned int)num;
+        while(unnum){
+            int temp=unnum&15;
+            res.insert(res.begin(),inttoHex[temp]);
+            unnum>>=4;
+        }
+        return res;
+    }
+    
+    
+};
+
+
+const string HEX = "0123456789abcdef";
+class Solution {
+public:
+    string toHex(int num) {
+        if (num == 0) return "0";
+        string result;
+        int count = 0;
+        while (num && count++ < 8) {
+            result = HEX[(num & 0xf)] + result;
+            num >>= 4;
+        }
+        return result;
+    }
+};

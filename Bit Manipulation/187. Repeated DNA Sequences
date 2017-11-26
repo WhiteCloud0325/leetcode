@@ -1,0 +1,56 @@
+All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, for example: "ACGAATTCCG". When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.
+
+Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.
+
+For example,
+
+Given s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT",
+
+Return:
+["AAAAACCCCC", "CCCCCAAAAA"].
+
+
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        int n=s.length();
+        unordered_map<int,int> hash_num;
+        unordered_map<int,string> hash_str;
+        vector<string> res;
+        if(n<=10) return res;
+        int key=0;
+        for(int i=0;i<10;i++){
+            int temp=hashChar(s[i]);
+            key=(key<<2)+temp;
+        }
+        hash_num[key]++;
+        hash_str[key]=s.substr(0,10);
+        for(int i=10;i<n;i++){
+            key-=hashChar(s[i-10])<<18;
+            key<<=2;
+            key+=hashChar(s[i]);
+            hash_num[key]++;
+            hash_str[key]=s.substr(i-9,10);
+        }
+        for(auto it=hash_num.begin();it!=hash_num.end();it++){
+            if(it->second>1)
+                res.push_back(hash_str[it->first]);
+        }
+        return res;
+    }
+    // A->00,C->01,G->10,T->11
+    int hashChar(char s){
+        int res;
+        switch(s){
+            case 'A':
+                res=0;break;
+            case 'C': 
+                res=1;break;
+            case 'G':
+                res=2;break;
+            case 'T':
+                res=3;
+        }
+        return res;
+    }
+};

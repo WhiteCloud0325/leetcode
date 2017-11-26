@@ -1,0 +1,63 @@
+Given an array of integers, every element appears three times except for one, which appears exactly once. Find that single one.
+
+Note:
+Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+如果所有数字的第i位比特位求和并且模3，结果是1或者0，因为每个数字只可能出现3次或者1次，所以这第i位比特位可以代表“single number”, 即我们可以通过最后模3，来确定single number每一个比特位的值是0还是1.。和Single Number的异或有异曲同工之妙。
+复杂度：由于外层循环统计32位，所以复杂度是O(32*N) 即 O(N)
+
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int res=0;
+        vector<int> bitnums(32,0);
+        for(int i=0;i<nums.size();i++){
+            int temp=nums[i];
+            int j=0;
+            while(temp&&j<32){
+                bitnums[j]+=temp&1;
+                temp>>=1;
+                j++;
+            }
+        }
+        for(int i=0;i<32;i++){
+            bitnums[i]%=3;
+            res+=(bitnums[i]<<i);
+        }
+        
+        return res;
+    }
+};
+Answer 2: 掩码法
+思路：ones记录到目前为止计算的变量为止，二进制1出现“1次”（mod 3 为1）的数位。twos记录到目前为止计算的变量为止，二进制出现“2”次（mod 3 为2）的数位。当ones和twos中的某一位同时为1则表示，二进制出现1为3次，此时将该位清零。就是用二进制来模拟三进制计算。最终ones记录的就是最终结果。
+ones   代表第ith 位只出现一次的掩码变量
+twos  代表第ith 位只出现两次次的掩码变量
+threes  代表第ith 位只出现三次的掩码变量
+当第 i 个比特位出现了第三次，清空ones和twos的第 i 个比特位都为0.最后的答案就是ones.
+例子：
+加入数组前三个为5，则各个变量变化如下：
+ones = 101, twos = 0, threes = 0;
+ones = 0, twos = 101, threes = 0;
+ones = 101, twos = 101, threes = 0;(执行到清ones ^= A[i])   => ones = 0, twos = 0, threes = 101;(执行到清零后)
+Attention:
+这种位的操作方法十分巧妙，需要好好学习，刚开始会比较难理解，但是从模拟三进制方法入手，就会容易些，并且每个变量都代表32比特位的一个数组。
+AC Code:
+[cpp] view plain copy
+class Solution {  
+public:  
+    int singleNumber(int A[], int n) {  
+        int ones = 0, twos = 0, threes = 0;  
+          
+        for(int i = 0; i < n; i++)  
+        {  
+            twos |= ones & A[i];  //twos积累值  
+            ones ^= A[i];  //ones不断求反，3次异或和1一次异或结果一样  
+            threes = ones & twos; //当该数出现三次时，ones和twos都保留了该位的值  
+            ones &= ~threes;  //清零出现三次的该位的值  
+            twos &= ~threes;  
+        }  
+          
+        return ones;  
+          
+    }  
+};  
