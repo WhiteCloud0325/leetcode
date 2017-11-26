@@ -1,0 +1,44 @@
+给m个数字，每个数组均为升序，现在你可以从两个不同的数组中挑选两个整数（每个数组选一个）并且计算差值。我们将两个整数a和b之间的差定义为他们的绝对差|a-b|
+你的任务是编写一个函数去找到不同数组之间的差值
+注意事项：
+1、每个数组的数组长度至少为1，至少两个不为空的数组。
+2、m个数组中所有整数的个数和在[2,10000]范围内。
+3、m个数组中所有的整数均将在[-10000,10000]范围内。
+格式：
+  输入每一行输入整数m代表数组的个数，第二行输入m个整数数组。输出每一行输出m个整数数组之间的最大差值。
+样例输入：
+  m=3
+  [[1,2,3],[4,5],[1,2,3]]
+样例输出
+ 4
+
+
+int arrayBigDifference(vector<vector<int>> &nums) {
+	int m = nums.size();
+	vector<int> minNum(2, INT_MAX);
+	vector<int> maxNum(2, INT_MIN);
+	bool tag = false;
+	for (int i = 0; i < m; i++) {
+		int n = nums[i].size();
+		int minTemp = nums[i][0];
+		int maxTemp = nums[i][n - 1];
+		if (minTemp<=minNum[0] && maxTemp>=maxNum[0]) tag = true;
+		else if(minTemp <= minNum[0] || maxTemp >= maxNum[0])tag = false;
+		if (minTemp <= minNum[0]) {
+			minNum[1] = minNum[0];
+			minNum[0] = minTemp;
+		}
+		else {
+			minNum[1] = min(minTemp, minNum[1]);
+		}
+		if (maxTemp >= maxNum[0]) {
+			maxNum[1] = maxNum[0];
+			maxNum[0] = maxTemp;
+		}
+		else {
+			maxNum[1] = max(maxTemp, maxNum[1]);
+		}
+	}
+	if (tag) return max(maxNum[1] - minNum[0], maxNum[0] - minNum[1]);
+	else return maxNum[0] - minNum[0];
+}
