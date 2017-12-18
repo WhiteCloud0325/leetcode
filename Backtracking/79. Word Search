@@ -1,0 +1,93 @@
+Related Topics:Array,Backtracking
+
+Question:
+Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+For example,
+Given board =
+
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+word = "ABCCED", -> returns true,
+word = "SEE", -> returns true,
+word = "ABCB", -> returns false.
+
+Answer:
+class Solution {
+public:
+    vector<vector<bool>> isFound;
+    int row;
+    int col;
+    bool exist(vector<vector<char>>& board, string word) {
+        row=board.size();
+        col=board[0].size();
+        int wordLen=word.length();
+        isFound=vector<vector<bool>>(row,vector<bool>(col,false));
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(word[0]!=board[i][j]) continue;
+                isFound[i][j]=true;
+                if(tryPath(board,word,1,i,j-1)||tryPath(board,word,1,i-1,j)||tryPath(board,word,1,i,j+1)||tryPath(board,word,1,i+1,j)) return true;
+                else isFound[i][j]=false;
+            }
+        }
+        return false;
+    }
+    bool tryPath(vector<vector<char>>& board, string word,int k,int i,int j){
+        if(k==word.length()) return true;
+        if(i>=0 && i<row && j>=0 && j<col){
+            if(isFound[i][j]) return false;
+            if(board[i][j]==word[k]){
+                isFound[i][j]=true;
+                if(tryPath(board,word,k+1,i,j-1)||tryPath(board,word,k+1,i-1,j)||tryPath(board,word,k+1,i,j+1)||tryPath(board,word,k+1,i+1,j)) 
+                    return true;
+                else{
+                    isFound[i][j]=false;
+                    return false;
+                }
+            }
+            return false;
+        }
+        else return false;
+    }
+};
+
+Answer2: 改进用board[i][j]='\0'来替换原来增加isFound二维数组来存储是否已经检查过该元素
+class Solution {
+public:
+    int row;
+    int col;
+    bool exist(vector<vector<char>>& board, string word) {
+        row=board.size();
+        col=board[0].size();
+        int wordLen=word.length();
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                if(tryPath(board,word,0,i,j)) return true;
+            }
+        }
+        return false;
+    }
+    bool tryPath(vector<vector<char>>& board, string word,int k,int i,int j){
+        if(k==word.length()) return true;
+        if(i>=0 && i<row && j>=0 && j<col){
+            if(board[i][j]=='\0') return false;
+            if(board[i][j]==word[k]){
+                char temp=board[i][j];
+                board[i][j]='\0';
+                if(tryPath(board,word,k+1,i,j-1)||tryPath(board,word,k+1,i-1,j)||tryPath(board,word,k+1,i,j+1)||tryPath(board,word,k+1,i+1,j)) 
+                    return true;
+                else{
+                    board[i][j]=temp;
+                }
+            }
+            return false;
+        }
+        else return false;
+    }
+};
