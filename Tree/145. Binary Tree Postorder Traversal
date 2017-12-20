@@ -1,0 +1,75 @@
+Related Topics:
+
+Question:
+Given a binary tree, return the postorder traversal of its nodes' values.
+
+For example:
+Given binary tree {1,#,2,3},
+   1
+    \
+     2
+    /
+   3
+return [3,2,1].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+
+Answer:Recursive
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        postOrder(root,res);
+        return res;
+    }
+    void postOrder(TreeNode *root,vector<int> &res){
+        if(root==NULL) return;
+        postOrder(root->left,res);
+        postOrder(root->right,res);
+        res.push_back(root->val);
+    }
+};
+
+Answer2:使用栈迭代的方式，将放入栈的节点的左右子书置为NULL，respush_back的条件是left==NULL,right==NULL
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode *> myStack;
+        TreeNode* cur=root;
+        while(cur){
+            if(cur->left==NULL&&cur->right==NULL){
+                res.push_back(cur->val);
+                if(myStack.empty()) cur=NULL;
+                else{
+                    cur=myStack.top();
+                    myStack.pop();
+                }
+            }
+            else{
+                TreeNode* left=cur->left,*right=cur->right;
+                cur->left=NULL;
+                cur->right=NULL;
+                myStack.push(cur);
+                if(left){
+                    cur=left;
+                    if(right)
+                        myStack.push(right);
+                }
+                else
+                    cur=right;
+            }
+        }
+        return res;
+    }
+    
+};
