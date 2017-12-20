@@ -1,0 +1,88 @@
+Related Topics: Stack, Tree, Design
+
+Question:
+Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
+
+Calling next() will return the next smallest number in the BST.
+
+Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
+
+
+Answer:
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class BSTIterator {
+public:
+    BSTIterator(TreeNode *root) {
+        TreeNode *cur=root;
+        while(cur){
+            myStack_.push(cur);
+            cur=cur->left;
+        }
+    }
+
+    /** @return whether we have a next smallest number */
+    bool hasNext() {
+        if(myStack_.empty()) return false;
+        else return true;
+    }
+
+    /** @return the next smallest number */
+    int next() {
+        TreeNode *pNode=myStack_.top();
+        myStack_.pop();
+        int res=pNode->val;
+        if(pNode->right){
+            myStack_.push(pNode->right);
+            pNode=pNode->right->left;
+            while(pNode){
+                myStack_.push(pNode);
+                pNode=pNode->left;
+            }
+        }
+        return res;
+    }
+    stack<TreeNode*> myStack_;
+    
+};
+
+/**
+ * Your BSTIterator will be called like this:
+ * BSTIterator i = BSTIterator(root);
+ * while (i.hasNext()) cout << i.next();
+ */
+ 
+ 
+ Answer2:
+ class BSTIterator {
+    stack<TreeNode *> myStack;
+public:
+    BSTIterator(TreeNode *root) {
+        pushAll(root);
+    }
+
+    /** @return whether we have a next smallest number */
+    bool hasNext() {
+        return !myStack.empty();
+    }
+
+    /** @return the next smallest number */
+    int next() {
+        TreeNode *tmpNode = myStack.top();
+        myStack.pop();
+        pushAll(tmpNode->right);
+        return tmpNode->val;
+    }
+
+private:
+    void pushAll(TreeNode *node) {
+        for (; node != NULL; myStack.push(node), node = node->left);
+    }
+};
