@@ -73,3 +73,28 @@ public:
     }
     
 };
+
+
+Answer3:preOrder的反转，从vector前端先插入根节点，再插入右子树，再插入左子树
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode *> myStack;
+        TreeNode* cur=root;
+        while(!myStack.empty()||cur){
+            if(cur){
+                myStack.push(cur);
+                res.insert(res.begin(),cur->val);
+                cur=cur->right;
+            }
+            else{
+                TreeNode *pNode=myStack.top();
+                myStack.pop();
+                cur=pNode->left;
+            }
+        }
+        return res;
+    }
+    
+};
