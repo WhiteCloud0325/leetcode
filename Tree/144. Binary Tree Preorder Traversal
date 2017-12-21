@@ -39,3 +39,36 @@ public:
         preOrder(root->right,res);
     }
 };
+
+
+Answer2:stack
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        TreeNode* cur=root;
+        stack<TreeNode*> myStack;
+        while(!myStack.empty()||cur){
+            if(cur){
+                myStack.push(cur);
+                res.push_back(cur->val);
+                cur=cur->left;
+            }
+            else{
+                cur=myStack.top();
+                cur=cur->right;
+                myStack.pop();
+            }
+        }
+        return res;
+    }
+};
