@@ -41,3 +41,22 @@ public:
         }
     }
 };
+
+Answer2:
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        paren(n,0,res,"");
+        return res;
+    }
+private:
+    void paren(int n, int m, vector<string>& res, string str){
+        if(m == 0 && n == 0){
+            res.push_back(str);
+            return;
+        }
+        if(n > 0) paren(n-1, m+1, res, str+"(");
+        if(m > 0) paren(n, m-1, res, str+")");
+    }
+};
