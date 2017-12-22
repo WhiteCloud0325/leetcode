@@ -1,0 +1,95 @@
+Difficulty: Medium
+Related Topics: Math, String
+
+Question:
+Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2.
+
+Note:
+
+1.The length of both num1 and num2 is < 110.
+2.Both num1 and num2 contains only digits 0-9.
+3.Both num1 and num2 does not contain any leading zero.
+4.You must not use any built-in BigInteger library or convert the inputs to integer directly.
+
+Answer:
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        if(num1=="0") return "0";
+        int len1=num1.length(),len2=num2.length();
+        string num=num1;
+        vector<string> allMul;
+        int i=len2-1;
+        while(i>=0){
+            allMul.push_back(mulchar(num,num2[i--]-'0'));
+            num.push_back('0');
+        }
+        string res="0";
+        for(int j=0;j<allMul.size();j++){
+            res=add(res,allMul[j]);
+        }
+        return res;
+        
+    }
+    string add(string num1,string num2){
+        int carry=0;
+        string res;
+        int i=num1.length()-1,j=num2.length()-1;
+        while(i>=0||j>=0||carry!=0){
+            int a=i>=0?num1[i--]-'0':0;
+            int b=j>=0?num2[j--]-'0':0;
+            int c=a+b+carry;
+            res.insert(res.begin(),c%10+'0');
+            carry=c/10;
+        }
+        return res;
+    }
+    string mulchar(string num,int n){
+        if(n==0) return "0";
+        if(n==1) return num;
+        string res;
+        int carry=0;
+        int i=num.length()-1;
+        while(i>=0||carry!=0){
+            int temp=i>=0?(num[i--]-'0')*n+carry:carry;
+            res.insert(res.begin(),temp%10+'0');
+            carry=temp/10;
+        }
+        return res;
+    }
+};
+
+Answer2:
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        
+        unsigned int l1=num1.size(),l2=num2.size();
+        if (l1==0||l2==0) return "0";
+        
+        vector<int> v(l1+l2,0);
+ 
+        for (unsigned int i=0;i<l1;i++){
+            int carry=0;
+            int n1=(int)(num1[l1-i-1]-'0');//Calculate from rightmost to left
+            for (unsigned int j=0;j<l2;j++){
+                int n2=(num2[l2-j-1]-'0');//Calculate from rightmost to left
+                
+                int sum=n1*n2+v[i+j]+carry;
+                carry=sum/10;
+                v[i+j]=sum%10;
+            }
+            if (carry>0)
+                v[i+l2]+=carry;
+
+        }
+        int start=l1+l2-1;
+        while(v[start]==0) start--;
+        if (start==-1) return "0";
+        
+        string s="";
+        for (int i=start;i>=0;i--)
+            s+=(char)(v[i]+'0');
+        return s;
+    }
+};
