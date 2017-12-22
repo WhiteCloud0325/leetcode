@@ -1,0 +1,33 @@
+Difficult: Easy
+Related Topics:Linked List, Two Pointers
+
+Question:
+Given a singly linked list, determine if it is a palindrome.
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+
+
+Answer:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *temp;
+    bool isPalindrome(ListNode* head) {
+        temp=head;
+        return check(head);
+    }
+    bool check(ListNode *p){
+        if(p==NULL) return true;
+        bool isPal=check(p->next) & (temp->val==p->val);
+        temp=temp->next;
+        return isPal;
+    }
+};
