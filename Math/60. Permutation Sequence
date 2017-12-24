@@ -1,0 +1,48 @@
+Difficulty: Medium
+Related Topics: Math Backtracking
+
+Question:
+The set [1,2,3,…,n] contains a total of n! unique permutations.
+
+By listing and labeling all of the permutations in order,
+We get the following sequence (ie, for n = 3):
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+Given n and k, return the kth permutation sequence.
+
+Note: Given n will be between 1 and 9 inclusive.
+
+
+Answer:
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        int num=1;
+        vector<int> isUsed(n,0);
+        string res;
+        for(int i=0;i<n;i++){
+            isUsed[i]=i+1;
+            num*=i+1;
+        }
+        while(n>0){
+            num/=n;
+            for(int i=0;i<n;i++){
+                if(k<=num){
+                    res.push_back(isUsed[i]+'0');
+                    isUsed.erase(isUsed.begin()+i);
+                    break;
+                }
+                k-=num;
+            }
+            n--;
+            
+        }
+        
+        return  res;
+    }
+};
