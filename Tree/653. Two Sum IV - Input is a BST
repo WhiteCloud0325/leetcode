@@ -1,0 +1,75 @@
+Related Topics: Tree
+Difficulty: Easy
+
+Question:
+Given a Binary Search Tree and a target number, return true if there exist two elements in the BST such that their sum is equal to the given target.
+
+Example 1:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+
+Output: True
+Example 2:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+
+Output: False
+
+Answer1: 使用中序遍历获得一个排序数组，然后使用二分搜索寻找 Space O(n)，Time O(n)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool findTarget(TreeNode* root, int k) {
+        vector<int> nums;
+        inOrder(root,nums);
+        for(int i = 0, j = nums.size()-1; i<j;){
+            if(nums[i] + nums[j] == k) return true;
+            (nums[i] + nums[j] < k)? i++ : j--;
+        }
+        return false;
+    }
+private: 
+    void inOrder(TreeNode* root,vector<int> &nums){
+        if(!root) return;
+        inOrder(root->left,nums);
+        nums.push_back(root->val);
+        inOrder(root->right,nums);
+    }
+    
+};
+
+Answer2: 使用HashTable来保存二叉树中所有的数，每次插入新节点之前看是否存在节点val=k-node.val
+class Solution {
+public:
+    bool findTarget(TreeNode* root, int k) {
+        unordered_set<int> hashTable;
+        return dfs(hashTable,root,k);
+    }
+    bool dfs(unordered_set<int> &hashTable,TreeNode *root,int k){
+        if(!root) return false;
+        if(hashTable.count(k-root->val)>0) return true;
+        hashTable.insert(root->val);
+        return dfs(hashTable,root->left,k)||dfs(hashTable,root->right,k);
+    }
+    
+};
