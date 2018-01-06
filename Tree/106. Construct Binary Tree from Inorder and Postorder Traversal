@@ -1,0 +1,55 @@
+Related Topics:Array, Tree, Depth-firt Search
+Difficulty: Medium
+
+Question:
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+Answer:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        if(inorder.empty()) return NULL;
+        int i=postorder.size()-1;
+        stack<TreeNode*> st;
+        TreeNode *root=new TreeNode(postorder[i]);
+        TreeNode *cur=root;
+        st.push(root);
+        int j=inorder.size()-1;
+        bool flag=true;
+        i--;
+        while(i>=0){
+            while(!st.empty() && st.top()->val == inorder[j]){
+                cur=st.top();
+                st.pop();
+                j--;
+                flag=false;
+            }
+            if(flag){
+                cur->right=new TreeNode(postorder[i]);
+                st.push(cur->right);
+                cur=cur->right;
+            }
+            else{
+                cur->left=new TreeNode(postorder[i]);
+                st.push(cur->left);
+                cur=cur->left;
+                flag=true;
+            }
+            i--;
+        }
+        return root;
+        
+    }
+};
