@@ -1,0 +1,53 @@
+Related Topics:Tree, Array, Depth-first Search
+Difficulty: Medium
+
+Question:
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+Answer:设置标志位flag来表示 True插入左子树，False 插入又子树，每次插入子树时将子节点放入栈中，如果栈顶节点val与inorder元素相同代表左子树到达末尾，
+开始插入最后出栈节点的右子树
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(preorder.empty()) return NULL;
+        stack<TreeNode *> st;
+        TreeNode *root=new TreeNode(preorder[0]);
+        st.push(root);
+        TreeNode *cur=root;
+        int i=1,j=0;
+        bool flag=true;
+        while(i<preorder.size()){
+            while(!st.empty() && st.top()->val == inorder[j]){
+                cur=st.top();
+                st.pop();
+                j++;
+                flag=false;
+            }
+            if(flag){
+                cur->left=new TreeNode(preorder[i]);
+                st.push(cur->left);
+                cur=cur->left;
+            }
+            else{
+                cur->right=new TreeNode(preorder[i]);
+                st.push(cur->right);
+                cur=cur->right;
+                flag=true;
+            }
+            i++;
+        }
+        return root;
+    }
+};
