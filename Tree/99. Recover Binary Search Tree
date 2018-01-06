@@ -51,3 +51,78 @@ public:
         inOrder(nums,root->right);
     }
 };
+
+Answer2:使用深度优先搜索，找到两个错误指针，error1 中序遍历，如果error1->val > root->val(root为当前指针) 则此为错误指针位置
+                                       error2 中序遍历反向，如果error2->val <root->val(root为当前指针) 则此为错误指针位置
+class Solution {
+public:
+    TreeNode *error1,*error2;
+    void recoverTree(TreeNode* root) {
+        error1=NULL,error2=NULL;
+        findError1(root);
+        findError2(root);
+        int temp=error1->val;
+        error1->val=error2->val;
+        error2->val=temp;
+    }
+    bool findError1(TreeNode *root){
+        if(root==NULL) return false;
+        bool isFound=findError1(root->left);
+        if(isFound) return true;
+        if(error1==NULL){
+            error1=root;
+            isFound=false;
+        }
+        else{
+            isFound=error1->val>root->val;
+        }
+        if(isFound) 
+            return true;
+        else{
+            error1=root;
+            return findError1(root->right);
+        }
+    }
+    bool findError2(TreeNode *root){
+        if(root==NULL) return false;
+        bool isFound=findError2(root->right);
+        if(isFound) return true;
+        if(error2==NULL){
+            error2=root;
+            isFound=false;
+        } 
+        else{
+            isFound=error2->val<root->val;
+        }
+        if(isFound) return true;
+        else{
+            error2=root;  
+            return findError2(root->left);
+        }
+    }
+};
+
+Answer3:
+class Solution {
+public:
+    TreeNode *error1,*error2;
+    TreeNode *preNode;
+    void recoverTree(TreeNode* root) {
+        error1=NULL,error2=NULL;
+        preNode=new TreeNode(INT_MIN);
+        findError(root);
+        int temp=error1->val;
+        error1->val=error2->val;
+        error2->val=temp;
+    }
+    void findError(TreeNode *root){
+        if(root ==NULL) return;
+        findError(root->left);
+        if(error1 ==NULL && preNode->val >=root->val)
+            error1=preNode;
+        if(error1 !=NULL && preNode->val >=root->val)
+            error2=root;
+        preNode=root;
+        findError(root->right);
+    }
+};
