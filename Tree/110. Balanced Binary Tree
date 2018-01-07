@@ -1,0 +1,56 @@
+Related Topic: Tree, Depth-first Search
+Difficulty: Easy
+
+Question:
+Given a binary tree, determine if it is height-balanced.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of 
+the two subtrees of every node never differ by more than 1.
+
+
+Answer1:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        if(!root) return true;
+        int left=depth(root->left);
+        int right=depth(root->right);
+        return (abs(left-right)<=1) && isBalanced(root->left) && isBalanced(root->right);
+    }
+    int depth(TreeNode *root){
+        if(root==NULL) return 0;
+        return 1+max(depth(root->left),depth(root->right));
+    }
+    
+};
+
+Answer2:改进方法使用深度优先搜索，使用flag标志位来表示由底向上每个结点是否平衡，O(n)时间
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        bool flag=true;
+        depth(root,flag);
+        return flag;
+    }
+    int depth(TreeNode *root,bool &flag){
+        if(root==NULL){
+            flag=true;
+            return 0;              
+        }
+        bool flag1=true,flag2=true;
+        int l=depth(root->left,flag1);
+        int r=depth(root->right,flag2);
+        flag=flag1 && flag2 && abs(l-r)<=1;
+        return 1+max(l,r);
+    }
+    
+};
