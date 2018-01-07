@@ -1,0 +1,42 @@
+Related Topics: Tree, Breadth-first Search, Depth-first Search
+Difficulty: Medium
+
+Question:
+Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+
+For example:
+Given the following binary tree,
+   1            <---
+ /   \
+2     3         <---
+ \     \
+  5     4       <---
+You should return [1, 3, 4].
+
+Answer:Depth-first Search, 用当前深度和容器大小比较，如果vector.size()<深度，说明此节点能够从右侧看到
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> res;
+        if(root==NULL) return res;
+        findSide(root,res,0);
+        return res;
+    }
+    void findSide(TreeNode *root, vector<int> &res,int num){
+        if(root==NULL) return;
+        num++;
+        if(res.size()<num)
+            res.push_back(root->val);
+        findSide(root->right,res,num);
+        findSide(root->left,res,num);
+    }
+};
