@@ -1,0 +1,41 @@
+Related Topics: String, Dynamic Programming
+Difficulty: Hard
+
+Question:
+Given a string S and a string T, count the number of distinct subsequences of S which equals T.
+
+A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, "ACE" is a subsequence of "ABCDE" while "AEC" is not).
+
+Here is an example:
+S = "rabbbit", T = "rabbit"
+
+Return 3.
+
+Answer1:
+动态规划，string t 为行，string s为列，i表示t的前i+1个子串ti，j表示s的前j+1子串sj,dp[i][j]表示ti是sj子序列的数目，首先要初始化来确定t第一个字符在s作为子串的数目，
+（所有循环结束考虑t的长度，即j<=col-row+i）,当s[j]==t[i],则dp[i][j]=dp[i-1][j-1]+dp[i][j-1],dp[i-1][j-1]是t(i-1)是s(j-1）子序列数目，
+dp[i][j-1]是ti是s（j-1）子序列数目
+class Solution {
+public:
+    int numDistinct(string s, string t) {
+        int col=s.length(),row=t.length();
+        if(col<row|| row==0) return 0;
+        int num=0;
+        vector<vector<int>> dp(row,vector<int>(col,0));
+        for(int j=0;j<=col-row;j++){
+            if(s[j]==t[0]){
+                num++;
+            }
+            dp[0][i]=num;
+        }
+        for(int i=1;i<row;i++){
+            for(int j=i;j<=col-row+i;j++){
+                if(s[j]==t[i])
+                    dp[i][j]=dp[i][j-1]+dp[i-1][j-1];
+                else
+                    dp[i][j]=dp[i][j-1];
+            }
+        }
+        return dp[row-1][col-1];
+    }
+};
