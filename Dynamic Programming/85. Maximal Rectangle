@@ -1,0 +1,60 @@
+Related Topics: Dynamic Programming
+Difficulty: Hard
+
+Question:
+Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+
+For example, given the following matrix:
+
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+Return 6.
+
+Answer1:
+The DP solution proceeds row by row, starting from the first row. Let the maximal rectangle area at row i and column j be computed by [right(i,j) - left(i,j)]*height(i,j).
+
+All the 3 variables left, right, and height can be determined by the information from previous row, and also information from the current row. So it can be regarded as a DP solution. The transition equations are:
+
+left(i,j) = max(left(i-1,j), cur_left), cur_left can be determined from the current row
+right(i,j) = min(right(i-1,j), cur_right), cur_right can be determined from the current row
+height(i,j) = height(i-1,j) + 1, if matrix[i][j]==‘1’;
+height(i,j) = 0, if matrix[i][j]==‘0’
+The code is as below. The loops can be combined for speed but I separate them for more clarity of the algorithm.
+
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if(matrix.empty()) return 0;
+        int row=matrix.size(),col=matrix[0].size();
+        vector<int> left(col,0);
+        vector<int> right(col,col);
+        vector<int> height(col,0);
+        int curleft,curright;
+        int res=0;
+        for(int i=0;i<row;i++){
+            curleft=0,curright=col;
+            for(int j=col-1;j>=0;j--){
+                if(matrix[i][j]=='1') right[j]=min(right[j],curright);
+                else{
+                    right[j]=col;
+                    curright=j;
+                }
+            }
+            for(int j=0;j<col;j++){
+                if(matrix[i][j]=='1'){
+                    height[j]++;
+                    left[j]=max(left[j],curleft);
+                }
+                else{
+                    height[j]=0;
+                    curleft=j+1;
+                    left[j]=0;
+                }
+                res=max(res,(right[j]-left[j])*height[j]);
+            }
+        }
+        return res;
+    }
+};
