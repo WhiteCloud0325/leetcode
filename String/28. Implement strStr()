@@ -1,0 +1,37 @@
+Difficulty: Easy
+Related Topics: String, Two Pointers
+
+Question:
+Implement strStr().
+
+Return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+
+Example 1:
+
+Input: haystack = "hello", needle = "ll"
+Output: 2
+Example 2:
+
+Input: haystack = "aaaaa", needle = "bba"
+Output: -1
+
+Answer1:
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        int len1=haystack.length(),len2=needle.length();
+        int p1_end=len2-1;
+        int p1,p2;
+        for(p1=0;p1_end<len1;++p1_end){
+            int p1_old=p1;
+            p2=0;
+            while(p1<len1 && p2<len2 && haystack[p1]==needle[p2]){
+                ++p1;
+                ++p2;
+            }
+            if(p2==len2) return p1_old;
+            p1=p1_old+1;
+        }
+        return -1;
+    }
+};
