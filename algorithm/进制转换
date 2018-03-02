@@ -1,0 +1,16 @@
+Difficulty:Easy
+
+Answer1:
+/十进制转换为d进制
+void convert(int num, int d){
+	std::stack<int> st;
+	while (num != 0){
+		st.push(num % d);
+		num /= d;
+	}
+	while (!st.empty()){
+		std::cout << st.top();
+		st.pop();
+	}
+	std::cout << std::endl;
+}
