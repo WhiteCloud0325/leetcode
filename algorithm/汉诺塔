@@ -1,0 +1,18 @@
+Problem：
+  n阶汉诺塔问题（Hanoi Tower）假设三个分别命名为A,B,和C的塔座，在A上插了n个直径大小各不相同、从小到大编号为1，2，...n的圆盘
+  现要求将A塔上的n个圆盘移动到C上并扔按相同顺序叠放，圆盘移动时必须遵循下列规则：
+  • 每次只能移动一个圆盘
+  • 圆盘可以插到A，B,C的任一塔座上
+  • 任何时刻都不能将一个较大的圆盘压在较小的圆盘下
+
+Answer：最少移动步数每移动上面n-1个圆盘步数是 2^(n-1),所以总部数K=1+2^1+2^2+...2^(n-1)=2^n-1
+
+递归
+int cnt = 0;
+void hanoi(int num, char source, char through, char target){
+	if (num == 0) return;
+	hanoi(num - 1, source, target, through);
+	printf("%d from %c to %c\n", num, source, target);
+	cnt++;
+	hanoi(num - 1, through, source, target);
+}
