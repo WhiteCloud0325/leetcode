@@ -94,3 +94,37 @@ public:
         
     }
 };
+Answer4:morris 空间复杂度O(n)
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        preorderMorris(root,res);
+        return res;
+    }
+    void preorderMorris(TreeNode *root,vector<int> &res){
+        TreeNode *cur=root;
+        while(cur){
+            if(!cur->left){
+                res.push_back(cur->val);
+                cur=cur->right;
+            }
+            else{
+                //查找前驱
+                TreeNode *node=cur->left;
+                while(node->right && node->right !=cur){
+                    node=node->right;
+                }
+                if(node->right==NULL){
+                    res.push_back(cur->val);
+                    node->right=cur;
+                    cur=cur->left;
+                }
+                else{
+                    node->right=NULL;
+                    cur=cur->right;
+                }
+            }
+        }
+    }
+};
