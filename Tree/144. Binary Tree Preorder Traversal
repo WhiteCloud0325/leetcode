@@ -72,3 +72,25 @@ public:
         return res;
     }
 };
+Answer3:
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        std::stack<TreeNode*> st;
+        TreeNode *cur=root;
+        while(!st.empty() || cur){
+            if(cur){
+                res.push_back(cur->val);
+                if(cur->right) st.push(cur->right);
+                cur=cur->left;
+            }
+            else{
+                cur=st.top();
+                st.pop();
+            }
+        }
+        return res;
+        
+    }
+};
