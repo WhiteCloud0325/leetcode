@@ -72,7 +72,7 @@ public:
         return res;
     }
 };
-Answer3:
+Answer3:空间复杂度O(n)
 class Solution {
 public:
     vector<int> preorderTraversal(TreeNode* root) {
