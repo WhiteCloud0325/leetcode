@@ -119,3 +119,43 @@ public:
         return res;
     }
 };
+Answer4:Morris Traversal
+vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        postorderMorris(root,res);
+        return res;
+    }
+    void postorderMorris(TreeNode *root,vector<int> &res){
+        TreeNode dump=TreeNode(0);
+        dump.left=root;
+        TreeNode *cur=&dump;    //当前节点
+        while(cur){
+            if(cur->left==NULL){
+                cur=cur->right;
+            }
+            else{
+                //寻找前驱
+                TreeNode *node=cur->left;
+                while(node->right && node->right!=cur)
+                    node=node->right;
+            
+                if(node->right==NULL){
+                    node->right=cur;
+                    cur=cur->left;
+                }
+                else{
+                    reverseVisit(cur->left,node,res);
+                    node->right=NULL;
+                    cur=cur->right;
+                }
+            }
+        }
+    }
+    void reverseVisit(TreeNode *from ,TreeNode *to,vector<int> &res){
+        res.push_back(from->val);
+        auto it=res.end()-1;
+        while(from!=to){
+            from=from->right;
+            it=res.insert(it,from->val);
+        }
+    }
