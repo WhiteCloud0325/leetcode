@@ -65,3 +65,38 @@ public:
         return vector;
     }
 };
+
+Answer3:Morris Traversal
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        inorderMorris(root,res);
+        return res;
+    }
+    void inorderMorris(TreeNode *root,vector<int> &res){
+        TreeNode *cur=root;
+        while(cur){
+            if(!cur->left){
+                res.push_back(cur->val);
+                cur=cur->right;
+            }
+            else{
+                //查找前驱
+                TreeNode *node=cur->left;
+                while(node->right && node->right !=cur){
+                    node=node->right;
+                }
+                if(node->right==NULL){
+                    node->right=cur;
+                    cur=cur->left;
+                }
+                else{
+                    res.push_back(cur->val);
+                    node->right=NULL;
+                    cur=cur->right;
+                }
+            }
+        }
+    }
+};
