@@ -98,3 +98,24 @@ public:
     }
     
 };
+Answer3:
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        TreeNode *cur=root;
+        stack<TreeNode*> st;
+        while(!st.empty() ||cur){
+            if(cur){
+                res.insert(res.begin(),cur->val);
+                if(cur->left) st.push(cur->left);
+                cur=cur->right;
+            }
+            else{
+                cur=st.top();
+                st.pop();
+            }
+        }
+        return res;
+    }
+};
