@@ -1,0 +1,67 @@
+Description
+若某个家族人员过于庞大，要判断两个是否是亲戚，确实还很不容易，给出某个亲戚关系图，求任意给出的两个人是否具有亲戚关系。
+规定：x和y是亲戚，y和z是亲戚，那么x和z也是亲戚。如果x,y是亲戚，那么x的亲戚都是y的亲戚，y的亲戚也都是x的亲戚。
+Input
+第一行：三个整数n,m,p，（n< =5000,m< =5000,p< =5000），分别表示有n个人，m个亲戚关系，询问p对亲戚关系。
+以下m行：每行两个数Mi，Mj，1< =Mi，Mj< =N，表示Mi和Mj具有亲戚关系。 接下来p行：每行两个数Pi，Pj，询问Pi和Pj是否具有亲戚关系。
+Output
+P行，每行一个’Yes’或’No’。表示第i个询问的答案为“具有”或“不具有”亲戚关系
+
+/*
+function:ufs_find
+@brief:查找根节点
+@param:vector<int> &ufs 并查集
+	   int x 查找的节点
+@return：返回根节点
+*/
+int ufs_find(vector<int> &ufs, int x){
+	int oldx = x;
+	while (ufs[x] >= 0)
+		x = ufs[x];
+	while (oldx!=x){
+		int temp = ufs[oldx];
+		ufs[oldx] = x;
+		oldx = temp;
+	}
+	return x;
+}
+/*
+@function：ufs_union
+@brief结合两个元素，查找两个元素的根结点然后比较，如果相同
+*/
+int ufs_union(vector<int> &ufs, int x, int y){
+	int rx = ufs_find(ufs, x);
+	int ry = ufs_find(ufs, y);
+	if ( rx == ry ) return -1;  //两个元素在同一集合中
+	else{
+		//两个元素不在同一集合，将y合并到x
+		ufs[rx] +=ufs[ry];
+		ufs[ry] = rx;
+		return rx;
+	}
+}
+/*
+@function:ufs_set_size
+@brief: 元素x所在结合大小
+@param: ufs 并查集
+		x 查找元素
+@return int 集合大小
+*/
+int ufs_set_size(vector<int> &ufs, int x){
+	int rx = ufs_find(ufs, x);
+	return -ufs[rx];
+}
+/*
+@function：collection
+@brief:使用并查集来求集合
+@param : N
+vector<int> m：m个关系
+@return vector<vector<int>>集合
+*/
+vector<vector<int>> collection(int N, vector<vector<int>> m){
+	//并集合初始化，每个元素初始化为-1，代表各自以自身为集合
+	vector<int> ufs(N, -1);
+	for (int i = 0; i < m.size(); i++){
+		ufs_union(ufs, m[i][0], m[i][1]);
+	}
+}
