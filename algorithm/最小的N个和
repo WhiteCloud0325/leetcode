@@ -1,0 +1,40 @@
+Related Topics：Array, Heap
+
+描述：有两个长度为N的序列A和B，在A和B中各取一个数可以得到N^2个和，求这些和中最小的N个。
+输入：第一行输入一个整数数N；第二行N个整数A；第三行N个整数B
+输出：输出仅一行，N个整数，空格隔开。
+
+Answer：使用最小堆，
+首先将A，B数组排序，然后可以有这样一个有序表：
+  A1+B1<A1+B2<A1+B3<......<A1+BN
+  A2+B1<A2+B2<A2+B3<......<A2+BN
+  .
+  .
+  .
+  AN+B1<AN+B2<AN+B3<......<AN+BN
+ 首先将第一列A[i]+B[0]N个数放入最小堆中，每次取出堆顶的元素A[i]+B[b]，然后再将A[i]+B[b+1]放入。
+std::vector<int> minNSum(std::vector<int> &numA, std::vector<int> &numB){
+	int N = numA.size();
+	std::vector<int> res;
+	std::sort(numA.begin(), numA.end());
+	std::sort(numB.begin(), numB.end());
+	std::vector<int> pos(N, 0);
+	std::priority_queue<int,std::vector<int>,std::greater<int>> minHeap;
+	for (int i = 0; i< N; i++){
+		minHeap.push(numA[i] + numB[0]);
+	}
+	for (int k = 0; k < N; k++){
+		for (int i = 0; i < N; i++){
+			if (minHeap.top() == (numA[i] + numB[pos[i]])){
+				res.push_back(minHeap.top());
+				minHeap.pop();
+				pos[i]++;
+				minHeap.push(numA[i] + numB[pos[i]]);
+				break;
+			}
+		}
+	}
+	return res;
+	
+	
+}
