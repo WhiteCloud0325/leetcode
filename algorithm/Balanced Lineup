@@ -1,0 +1,112 @@
+Related Topics 线段树
+
+描述：
+给定$N(1<=N <= 50,000) 个数, $A_1, A_2, ... , A_N$，求任意区间中最大数和最小数的差。
+
+输入
+第一行包含两个整数，$N$和$Q$。$Q$表示查询次数。
+
+第2到N+1行，每行包含一个整数$A_i$。
+
+第N+2到N+Q+1行，每行包含两个整数$a$和$b(1 \leq a \leq b \leq N)$，表示区间$A[a,b]$。
+
+输出
+对每个查询进行回应，输出该区间内最大数和最小数的差
+样例输入：
+6 3
+1
+7
+3
+4
+2
+5
+1 5
+4 6
+2 2
+
+Answer：
+#include <iostream>
+#include <cstdio>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <functional>
+#include <cstdio>
+#include <limits.h>
+using namespace std;
+
+int minres, maxres;
+//[l,r]表示当前节点区间，rt表示当前节点的实际存储位置
+//[L,R]查询节点区间
+//更新节点信息
+void PushUp(int rt, vector<int> &minA, vector<int> &maxA){
+	minA[rt] = min(minA[rt << 1], minA[rt << 1 | 1]);
+	maxA[rt] = max(maxA[rt << 1], maxA[rt << 1 | 1]);
+}
+
+//建立区间树
+void Build(int l, int r, int rt, vector<int> &A,vector<int> &minA, vector<int> &maxA){
+	if (l == r){//到达叶节点 存储minA和maxA数值
+		minA[rt] = A[l];
+		maxA[rt] = A[l];
+		return;
+	}
+	int mid = (l + r) >> 1;
+	//左右递归
+	Build(l, mid, rt << 1, A, minA, maxA);
+	Build(mid + 1, r, rt << 1 | 1, A, minA, maxA);
+	PushUp( rt, minA, maxA);
+	
+}
+//点修改
+//[l,r]表示当前区间，rt是当前节点编号//l,r表示当前节点区间，rt表示当前节点编号 
+void Update(int L, int C, int l, int r, int rt, vector<int> &minA, vector<int> &maxA){
+	if (l == r){//到达叶节点，修改叶节点的值
+		minA[rt] += C;
+		maxA[rt] += C;
+		return;
+	}
+	int m = (l + r) >> 1;
+	//根据条件判断往左子树调用还是往右
+	if (L <= m) Update(L, C, l, m, rt << 1,minA,maxA);
+	else       Update(L, C, m + 1, r, rt << 1 | 1,minA,maxA);
+	PushUp(rt,minA,maxA);//子节点的信息更新了，所以本节点也要更新信息
+}
+
+//Query 区间查询
+void Query(int L, int R, int l, int r, int rt, vector<int> &minA, vector<int> &maxA){
+	if (L <= l && r <= R){
+		minres = min(minres, minA[rt]);
+		maxres = max(maxres, maxA[rt]);
+		return;
+	}
+	int mid = (l + r) >> 1;
+	//左子区间:[l,m] 右子区间：[m+1,r]  求区间:[L,R]
+	if (L <= mid) Query(L,R,l, mid, rt << 1, minA, maxA);
+	if (R > mid) Query(L, R, mid + 1, r, rt << 1 | 1, minA, maxA);
+	
+}
+
+int main(){
+	int N, Q;
+	scanf("%d%d", &N, &Q);
+	int n = N;
+	vector<int> A(N + 1, 0);
+	vector<int> minA(4 * N , INT_MAX);
+	vector<int> maxA(4 * N , INT_MIN);
+	int i = 1;
+	while (i <= N){
+		scanf("%d",&A[i++]);
+	}
+	Build(1, N, 1, A, minA, maxA);
+	int low, high;
+	while (Q--){
+		minres = INT_MAX;
+		maxres = INT_MIN;
+		scanf("%d%d",&low,&high);
+		Query(low, high, 1, N, 1, minA, maxA);
+		printf("%d\n",maxres-minres);
+	}
+}
