@@ -1,0 +1,74 @@
+Related Topics: 并查集
+
+描述：
+  一个学校有n个社团，一个学生能同时加入不同的社团。由于社团内的同学们交往频繁，如果一个学生感染了病毒，该社团的所有学生都会感染病毒。
+现在0号同学感染了病毒，问一共多少个人感染了病毒。
+
+输入：
+  输入包含多组测试用例。每个测试用例，第一行包含两个整数n，m，n表示学生个数，m表示社团个数。假设0<n<=30000,0<=m<=500。每个学生从0到n-1编号。接下来是
+m行，每行开头是一个整数k，表示该社团的学习个数，接着是k个整数表示该社团的学生编号。最后一个测试用例，n=0，m=0，表示输入结束。
+
+输出：
+  对每个测试用例，输出感染病毒的学生数目。
+
+样例输入：
+  100 4
+  2 1 2
+  5 10 13 11 12 14
+  2  0 1
+  2 99 2
+  200 2
+  1 5
+  5 1 2 3 4 5
+  1 0 
+  0 0
+  
+  Answer：
+  int ufs_find(vector<int> &ufs, int x){
+	int oldx = x;
+	while (ufs[x] >= 0)
+		x = ufs[x];
+	while (oldx != x){
+		int temp = ufs[oldx];
+		ufs[oldx] = x;
+		oldx = temp;
+	}
+	return x;
+}
+/*
+两者已在同一集合返回操作失败返回-1，否则将y的集合加到x的集合
+*/
+int ufs_union(vector<int> &ufs, int x, int y){
+	int rx = ufs_find(ufs, x);
+	int ry = ufs_find(ufs, y);
+	if (rx == ry) return -1;
+	ufs[rx] += ufs[ry];
+	ufs[ry] = rx;
+	return rx;
+}
+int ufs_set_size(vector<int> &ufs, int x){
+	int rx = ufs_find(ufs, x);
+	return -ufs[rx];
+}
+
+int main()
+{
+	int n, m,k;
+	while (cin>>n>>m  && n>0){
+		vector<int> ufs(n, -1);
+		while (m > 0){
+			int x;
+			cin>>k>>x;
+			k--;
+			while (k){
+				int y;
+				cin>>y;
+				ufs_union(ufs,x, y);
+				k--;
+			}
+			--m;
+		}
+		cout << ufs_set_size(ufs, 0);
+	}
+	return 0;
+}
