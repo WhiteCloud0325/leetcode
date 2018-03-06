@@ -1,1 +1,1 @@
-
+在POJ上做题注意输入输出都使用scanf和printf，使用cin和cout会Time Limit Exceeded
