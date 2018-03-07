@@ -1,0 +1,107 @@
+约瑟夫问题：
+描述：
+有编号从1到N的N个小朋友在玩一种出圈的游戏。开始时N个小朋友围成一圈，编号为i+1的小朋友站在编号为i小朋友左边。编号为1的小朋友站在编号为N的小朋友左边。
+首先编号为1的小朋友开始报数，接着站在左边的小朋友顺序报数，直到数到某个数字M时就出圈。直到只剩下1个小朋友，则游戏完毕。
+
+现在给定N,M，求N个小朋友的出圈顺序。
+
+输入：
+唯一的一行包含两个整数N,M(1<=N,M<=30000)。
+
+输出:
+唯一的一行包含N个整数，每两个整数中间用空格隔开，第i个整数表示第i个出圈的小朋友的编号。
+
+样例输入:
+5 3
+样例输出：
+3 1 5 2 4
+
+Answer1：用vector存在所有数每次删除pos = (pos + m - 1) % num.size()的数
+int main(){
+	int N, M;
+	scanf("%d%d", &N, &M);
+	vector<int> num(N, 0);
+	for (int i = 0; i < N; i++) num[i] = i + 1;
+	int  pos= 0;
+	while (!num.empty()){
+		int m = M%num.size();
+		pos = (pos + m - 1) % num.size();
+		printf("%d,", num[pos]);
+		num.erase(num.begin() + pos);
+	}
+	printf("\n");
+	
+}
+
+Answer2：线段树
+一个人在当前剩余队列中编号为$i$，则说明他是从左到右数第$i$个人，这启发我们可以用线段树来解决问题。用线段树维护原编号$[i..j]$内还有多少人没 有被淘汰，这样每次选出被淘汰者后，在当前线段树中查找位置就可以了。
+
+例如我们有5个原编号，当前淘汰者在剩余队列中编号为3，先看左子树，即原编号[1..3]区间内，如果剩下的人不足3个，则说明当前剩余编号为3的 这个人原编号只能是在[4..5]区间内，继续在[4..5]上搜索；如果[1..3]内剩下的人大于等于3个，则说明就在[1..3]内，也继续缩小范围查找，这样即可在$O(\log N)$时间内完成对应。问题得到圆满的解决。
+
+#define MAXN 30001
+
+struct node_t{
+	int left, right;
+	int count;  //区间元素个数
+};
+
+node_t node[MAXN * 4];
+void init(){
+	memset(node, 0, sizeof(node));
+}
+
+//以t为根结点，为区间[l,r]建立线段树
+void build(int t, int l, int r){
+	node[t].left = l;
+	node[t].right = r;
+	node[t].count = r - l + 1;
+	if (l == r) return;
+	int m = (l + r) >> 1;
+	build(t << 1, l, m);
+	build(t << 1 | 1, m + 1, r);
+}
+/* 
+param[in] t 根节点
+param[in] i 剩余队列编号
+return 被删除的数字
+*/
+int deleteNode(int t, int i){
+	node[t].count--;
+	if (node[t].left == node[t].right){
+		printf("%d ", node[t].left);
+		return node[t].left;
+	}
+	if (node[t << 1].count >= i) return deleteNode(t << 1, i);
+	else return deleteNode(t << 1 | 1, i - node[t << 1].count);
+}
+
+int get_count(int t, int i) {
+	if (node[t].right <= i) return node[t].count;
+
+	const int mid = (node[t].left + node[t].right) / 2;
+	int s = 0;
+	if (i > mid) {
+		s += node[t<<1].count;
+		s += get_count(t<<1|1, i);
+	}
+	else
+		s += get_count(t<<1, i);
+	return s;
+}
+
+int main(){
+	int n, m;
+	scanf("%d%d", &n, &m);
+	init();
+	build(1, 1, n);
+	int i = 0;
+	int j = 0;
+	for (i = 1; i <= n; i++){
+		j += m;
+		if (j > node[1].count) j %= node[1].count;
+		if (j == 0) j = node[1].count;
+		int k = deleteNode(1, j);
+		j = get_count(1, k);
+	}
+	return 0;
+}
