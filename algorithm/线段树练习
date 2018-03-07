@@ -1,0 +1,98 @@
+
+描述：
+一行N(1<=N <= 100000)个方格，开始每个格子里都有一个整数。现在动态地提出一些命令请求，有两种命令，查询和增加：求某一个特定的子区间[a,b]中所有元素的和；
+指定某一个格子x，加上一个特定的值A。现在要求你能对每个请求作出正确的回答。
+
+输入
+输入文件第一行为一个整数N，接下来是n行每行1个整数，表示格子中原来的整数。接下来是一个正整数Q，再接下来有Q行，表示Q个询问，
+第一个整数表示命令代号，命令代号1表示增加，后面的两个数$a$和$x$表示给位置$a$上的数值增加$x$，命令代号2表示区间求和，后面两个整数a和b，表示要求[a,b]之间的区间和。
+
+输出
+共Q行，每个整数
+
+样例输入
+6
+4 
+5 
+6 
+2 
+1 
+3
+4
+1 3 5
+2 1 4
+1 1 9
+2 2 6
+
+Answer:
+#include <iostream>
+#include <cstdio>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <functional>
+#include <cstdio>
+#include <limits.h>
+using namespace std;
+
+
+void PushUp( int rt,vector<int> &sum){
+	sum[rt] = sum[rt << 1] + sum[rt << 1 | 1];
+}
+void Build(int l, int r, int rt, vector<int> &A, vector<int> &sum){
+	if (l == r){
+		sum[rt] = A[l];
+		return;
+	}
+	int mid = (l + r) >> 1;
+	Build(l, mid, rt << 1, A, sum);
+	Build(mid + 1, r, rt << 1 | 1, A, sum);
+	PushUp(rt, sum);
+}
+int Query(int L, int R, int l, int r,int rt, vector<int> &A, vector<int> &sum){
+	if (L <= l && r <= R){
+		return sum[rt];
+	}
+	int res = 0;
+	int mid = (l + r) >> 1;
+	if (L <= mid) res += Query(L, R, l, mid, rt << 1, A, sum);
+	if (R > mid) res += Query(L, R, mid + 1, r, rt << 1 | 1, A, sum);
+	return res;
+}
+
+void Update(int pos,int C, int l, int r, int rt, vector<int> &A, vector<int> &sum){
+	if (l == r){
+		A[pos] += C;
+		sum[rt] += C;
+		return;
+	}
+	int mid = (l + r) >> 1;
+	if (pos <= mid) Update(pos, C, l, mid, rt << 1, A, sum);
+	else Update(pos, C, mid + 1, r, rt << 1 | 1, A, sum);
+	PushUp(rt, sum);
+}
+
+int main(){
+	int N, Q;
+	scanf("%d", &N);
+	int n = N;
+	vector<int> A(N + 1, 0);
+	vector<int> sum(4 * N , 0);
+	int i = 1;
+	while (i <= N){
+		scanf("%d",&A[i++]);
+	}
+	Build(1, N, 1, A, sum);
+	scanf("%d", &Q);
+	int q, a, b;
+	while (Q--){
+		scanf("%d%d%d",&q,&a,&b);
+		if (q == 1) Update(a, b, 1, N, 1, A, sum);
+		if (q == 2){
+			int res = Query(a, b, 1, N, 1, A, sum);
+			printf("%d\n", res);
+		}
+	}
+}
