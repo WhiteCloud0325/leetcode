@@ -1,0 +1,126 @@
+线段树
+区间修改，区间查询
+源自：http://poj.org/problem?id=3468
+描述：
+You have N integers, A_1, A_2, ... , A_N. 
+You need to deal with two kinds of operations. One type of operation is to add some given number to each number in a given interval.
+The other is to ask for the sum of numbers in a given interval.
+
+输入
+The first line contains two numbers $N$ and $Q$. $1 \leq N,Q \leq 100000$.
+
+The second line contains $N$ numbers, the initial values of $A_1, A_2, ... , A_N$. $-1000000000 \leq A_i \leq 1000000000$.
+
+Each of the next Q lines represents an operation.
+"C a b c" means adding c to each of $A_a, A_{a+1}, ... , A_b. -10000 ≤ c ≤ 10000.
+"Q a b" means querying the sum of $A_a, A_{a+1}, ... , A_b$.
+
+subsubsection{输出}
+You need to answer all $Q$ commands in order. One answer in a line.
+
+subsubsection{样例输入}
+begin{Code}
+10 5
+1 2 3 4 5 6 7 8 9 10
+Q 4 4
+Q 1 10
+Q 2 4
+C 3 6 3
+Q 2 4
+
+Answer：
+#include <iostream>
+#include <cstdio>
+#include <stack>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <functional>
+#include <cstdio>
+#include <limits.h>
+#include <cstdlib>
+using namespace std;
+
+
+void PushUp( int rt,vector<long> &sum){
+	sum[rt] = sum[rt << 1] + sum[rt << 1 | 1];
+}
+void Build(int l, int r, int rt, vector<int> &A, vector<long> &sum){
+	if (l == r){
+		sum[rt] = A[l];
+		return;
+	}
+	int mid = (l + r) >> 1;
+	Build(l, mid, rt << 1, A, sum);
+	Build(mid + 1, r, rt << 1 | 1, A, sum);
+	PushUp(rt, sum);
+}
+void PushDown(int rt, int l, int r,vector<long> &sum,vector<long> &lazy)
+{
+	if (lazy[rt])
+	{
+		lazy[rt << 1] += lazy[rt];
+		lazy[rt << 1 | 1] += lazy[rt];
+		int m = (l + r) >> 1;
+		sum[rt << 1] += (m-l+1) * lazy[rt];
+		sum[rt << 1 | 1] += (r-m) * lazy[rt];	
+		lazy[rt] = 0;
+	}
+}
+
+//区间更新
+void Update(int L, int R, int C, int l, int r, int rt, vector<long> &sum,vector<long>&lazy){
+	if (L <=l && r <= R){
+		sum[rt] += C*(r - l + 1);
+		lazy[rt] += C;
+		return;
+	}
+	int mid = (l + r) >> 1;
+	PushDown(rt, l, r, sum, lazy);
+	if (L <= mid)
+		Update(L, R, C, l, mid,rt<<1, sum, lazy);
+	if (R > mid)
+		Update(L, R, C, mid + 1, r, rt << 1 | 1, sum, lazy);
+	PushUp(rt, sum);
+}
+//区间查询
+int Query(int L, int R,  int l, int r, int rt, vector<long> &sum, vector<long>&lazy){
+	if (L <=l && r <= R){
+		return sum[rt];
+	}
+	long res = 0;
+	int mid = (l + r) >> 1;
+	PushDown(rt, mid-l+1, r-mid, sum, lazy);
+	if (L <= mid) res += Query(L, R, l, mid, rt << 1,  sum,lazy);
+	if (R > mid) res += Query(L, R, mid + 1, r, rt << 1 | 1,  sum,lazy);
+	return res;
+}
+int main(){
+	int N, Q;
+	scanf("%d%d", &N,&Q);
+	vector<int> A(N + 1, 0);
+	vector<long> sum(4 * N , 0);
+	vector<long> lazy(4 * N, 0);
+ 	int i = 1;
+	while (i <= N){
+		scanf("%d",&A[i++]);
+	}
+	Build(1, N, 1, A, sum);
+	int  a, b,c;
+	char q;
+	
+	while (Q--){
+		scanf("%c", &q);
+		scanf("%c",&q);
+		if (q == 'C'){
+			scanf("%d%d%d", &a, &b, &c);
+			Update(a, b,c, 1, N, 1,  sum,lazy);
+		}
+		if (q == 'Q'){
+			scanf("%d%d", &a, &b);
+			int res = Query(a, b, 1, N, 1, sum,lazy);
+			printf("%d\n", res);
+		}
+	}
+}
