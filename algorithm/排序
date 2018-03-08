@@ -1,0 +1,64 @@
+一、插入排序
+
+1.直接插入排序(Straight Insertion Sort)： 把排序的n个元素分成已排序表和无序表，每次从无序表取一个元素与有序表元素比较插入到合适位置。
+初始有序表中只有一个元素啊a[0],依次从1到n-1元素插入到有序表中，每次插入时都是从有序表最后一个元素开始比较。
+void straight_insert_sort(vector<int> &nums){
+	for (int i = 1; i < nums.size(); i++){
+		for (int j = i - 1; j >= 0; j--){
+			if (nums[j] < nums[j + 1]) break;
+			int temp = nums[j];
+			nums[j] = nums[j + 1];
+			nums[j + 1] = temp;
+		}
+	}
+}
+
+2.折半插入排序(Binary Insertion Sort):与直接插入排序不同的是，插入动作使用Binary Search（折半查找）
+void binary_insertion_sort(vector<int> &nums){
+	for (int i = 1; i < nums.size(); i++){
+		int left = 0; int right = i;
+		while (left < right){
+			int mid = (left + right) >> 1 ;
+			if (nums[i] < nums[mid])
+				right = mid;
+			else
+				left = mid+1;
+		}
+		int temp = nums[i];
+		nums.erase(nums.begin() + i);
+		nums.insert(nums.begin() + left, temp);
+	}
+}
+Answer2:
+void binary_insertion_sort(vector<int> &nums){
+	for (int i = 1; i < nums.size(); i++){
+		int left = 0; int right = i-1;
+		while (left <= right){
+			int mid = (left + right) >> 1 ;
+			if (nums[i] < nums[mid])
+				right = mid-1;
+			else
+				left = mid+1;
+		}
+		int temp = nums[i];
+		nums.erase(nums.begin() + i);
+		nums.insert(nums.begin() + left, temp);
+	}
+}
+3.希尔插入排序(shell)
+设待排序序列有n个元素，首先取一个整数gap = gap/3+1作为间隔。将全部元素分为gap个子序列，所有距离为gap的元素放在同一个子序列中，在每一个子序列中分别拖行
+直接插入排序。然后缩小gap，取gap=gap/3+1.重复上述的子序列划分和排序工作.直到最后gap=1.将所有元素放在同一序列中排序为止。
+
+void shell_sort(vector<int> &nums){
+	int gap = nums.size();
+	while (gap > 1){
+		gap = gap / 3 + 1;
+		int i, j,tmp;
+		for (i = gap; i<nums.size(); i++){
+			tmp = nums[i];
+			for (j = i - gap; j >= 0 &&tmp < nums[j]; j -= gap)
+				nums[j + gap] = nums[j];
+			nums[j + gap] = tmp;
+		}
+	}
+}
