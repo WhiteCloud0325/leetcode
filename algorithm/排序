@@ -62,3 +62,50 @@ void shell_sort(vector<int> &nums){
 		}
 	}
 }
+
+二、交换排序（设排序数组为N）
+1.冒泡排序：从前往后两两比较相邻元素的值，如果发生逆序则交换他们，直到序列完成，则最大的数就排到数组最后一位，排序序列从最后减少一个，依次从前往后排序。
+void bubble_sort(vector<int> &nums){
+	for (int i = nums.size() - 1; i >= 1; i--){
+		for (int j = 0; j < i; j++){
+			if (nums[j] > nums[j + 1]){
+				int temp = nums[j];
+				nums[j] = nums[j + 1];
+				nums[j + 1] = temp;
+			}
+		}
+	}
+}
+
+从后往前最小值冒到最前面
+void bubble_sort(vector<int> &nums){
+	for (int i = 0; i < nums.size() - 1; i++){
+		for (int j = nums.size() - 1; j > i; j--){
+			if (nums[j] < nums[j - 1]){
+				int temp = nums[j];
+				nums[j] = nums[j - 1];
+				nums[j - 1] = temp;
+			}
+		}
+	}
+}
+
+2.快速排序(quick sort)
+基本思想是任取待排序元素序列中的某个元素（例如取第一个元素）作为基准，按照该元素的关键字大小，将整个元素序列划分为左右两个子序列：
+左侧子序列中所有元素的关键字都小于基准元素的关键字，右侧子序列中所有元素的关键字都大于或等于基准元素的关键字，
+基准元素则排在这两个子序列中间（这也是该元素最终应该安放的位置）。然后分别对这两个子序列重复施行上述算法，直到所有的元素都排在相应位置为止。
+
+void quick_sort(vector<int>&nums ,int start,int end){
+	if (start >= end - 1) return;
+	int tmp = nums[start];
+	int i = start, j = end-1;
+	while (i < j){
+		while (i<j && nums[j] >= tmp) j--;
+		nums[i] = nums[j];
+		while (i<j && nums[i] <= tmp) i++;
+		nums[j] = nums[i];
+	}
+	nums[i] = tmp;
+	quick_sort(nums, start, i );
+	quick_sort(nums,i + 1, end);
+}
