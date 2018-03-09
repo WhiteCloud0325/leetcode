@@ -186,3 +186,21 @@ void merge_sort(vector<int> &nums) {
 	merge_sort(right);
 	nums = Merge(left, right);
 }
+五、基数排序
+void radix_sort(vector<int> &nums){
+	int d = 1;
+	vector<vector<int>> count_v(10, vector<int>());
+	for (int i = 0; i < 10; i++){
+		for (int j = 0; j < nums.size(); j++){
+			count_v[(nums[j] / d) % 10].push_back(nums[j]);
+		}
+		int k = 0;
+		for (int j = 0; j < 10; j++){
+			while (!count_v[j].empty()){
+				nums[k++] = *count_v[j].begin();
+				count_v[j].erase(count_v[j].begin());
+			}
+		}
+		d *= 10;
+	}
+}
