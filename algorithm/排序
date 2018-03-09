@@ -109,3 +109,21 @@ void quick_sort(vector<int>&nums ,int start,int end){
 	quick_sort(nums, start, i );
 	quick_sort(nums,i + 1, end);
 }
+三、选择排序
+1.简单选择排序
+步骤：
+(1)在a[i]...a[n-1]选择最小的元素；
+(2）如果最小元素位置不是a[i]则交换p[i]和最小元素
+(3)剩下的a[i+1]a[n-1]重复(2)
+void simple_selection_sort(vector<int> &nums) {
+	for (int i = 0; i <=nums.size()-2; i++) {
+		int tmp = i;
+		for (int j = i + 1; j < nums.size(); j++) {
+			if (nums[j] <nums[tmp]) 
+				tmp = j;
+		}
+		if (tmp != i) {
+			swap(nums[i], nums[tmp]);
+		}
+	}
+}
