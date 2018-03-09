@@ -1,0 +1,79 @@
+Difficulty: Medium
+Related Topics:BackTracking
+
+Question:
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+For example,
+[1,1,2] have the following unique permutations:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+
+Answer1: 使用 j来表示上一个此位置的值，如果nums[i]==nums[j]表示此位置曾设过此数，则跳过。
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<bool> fg;
+    vector<int> cur;
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        int n=nums.size();
+        fg=vector<bool>(n,false);
+        sort(nums.begin(),nums.end());
+        backTrack(nums,0);
+        return res;
+    }
+    void backTrack(vector<int> &nums,int k){
+        int j=-1;
+        for(int i=0;i<nums.size();i++){
+            if(fg[i]) continue;
+            if(j==-1) j=i;
+            else{
+                if(nums[j]==nums[i]) continue;
+            }
+            j=i;
+            cur.push_back(nums[i]);
+            k++;
+            fg[i]=true;
+            if(k==nums.size())
+                res.push_back(cur);
+            else
+                backTrack(nums,k);
+            cur.pop_back();
+            k--;
+            fg[i]=false;
+        }            
+    } 
+};
+
+Answer2:
+class Solution {
+public:
+    vector<vector<int>> res;
+    vector<bool> fg;
+    vector<int> cur;
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        int n=nums.size();
+        fg=vector<bool>(n,false);
+        sort(nums.begin(),nums.end());
+        backTrack(nums,0);
+        return res;
+    }
+    void backTrack(vector<int> &nums,int k){
+        for(int i=0;i<nums.size();i++){
+            if( fg[i] || i>0&& nums[i]==nums[i-1] && !fg[i-1]) continue; 
+            cur.push_back(nums[i]);
+            k++;
+            fg[i]=true;
+            if(k==nums.size())
+                res.push_back(cur);
+            else
+                backTrack(nums,k);
+            cur.pop_back();
+            k--;
+            fg[i]=false;
+        }            
+    } 
+};
