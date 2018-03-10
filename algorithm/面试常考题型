@@ -1,0 +1,105 @@
+1.两个栈实现队列
+class MyQueue {
+public:
+    /** Initialize your data structure here. */
+    MyQueue() {
+        
+    }
+    
+    /** Push element x to the back of queue. */
+    void push(int x) {
+        input.push(x);
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    int pop() {
+        int temp=peek();
+        output.pop();
+        return temp;
+    }
+    
+    /** Get the front element. */
+    int peek() {
+        if(output.empty()){
+            while(!input.empty()){
+                output.push(input.top());
+                input.pop();
+            }
+        }
+        return output.top();
+    }
+    
+    /** Returns whether the queue is empty. */
+    bool empty() {
+        if(input.empty()&&output.empty()) return true;
+        else return false;
+    }
+private:
+    stack<int> input,output;
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * bool param_4 = obj.empty();
+ */
+ 
+ 2.反转一个链表
+  ListNode* reverseList(ListNode* head) {
+        ListNode * left=NULL,*right=NULL;
+        while(head){
+            right=head->next;
+            head->next=left;
+            left=head;
+            head=right;
+        }
+        return left;
+    }
+ 3.一个链表删除所有值为val的节点
+ ListNode* removeElements(ListNode* head, int val) {
+        while(head && val == head->val) head=head->next;
+        if(!head) return head;
+        ListNode * last=head,*cur=head->next;
+        while(cur){
+            if(val == cur->val){
+                last->next=cur->next;
+                delete cur;
+                cur=last->next;
+            }
+            else{
+                last=cur;
+                cur=cur->next;
+            }
+        }
+        return head;
+    }
+ListNode *removeElements(ListNode *head, int val)
+{
+    ListNode **list = &head;
+
+    while (*list != nullptr)
+    {
+        if ((*list)->val == val)
+        {
+            *list = (*list)->next;
+        }
+        else
+        {
+            list = &(*list)->next;
+        }
+    }
+
+    return head;
+}
+
+4.二叉树深度
+int Depth(TreeNode *root){
+  if(!root) return 0;
+  int d1=1+Depth(root->left);
+  int d2=1+Depth(root->right);
+  return (d1>d2)?d1:d2
+}
+
