@@ -1,0 +1,44 @@
+Difficulty: Medium
+Related Topics:Heap,Divide and Conquer
+
+Question:
+Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+For example,
+Given [3,2,1,5,6,4] and k = 2, return 5.
+
+Note: 
+You may assume k is always valid, 1 ≤ k ≤ array's length.
+
+Answer:使用最大堆
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        build_heap(nums);
+        int len=nums.size();
+        for(int i=1;i<k;i++){
+            swap(nums[0],nums[len-i]);
+            max_heapify(nums,0,len-i);
+        }
+        return nums[0];
+    }
+    void max_heapify(vector<int> &nums,int i,int end){
+        if(i>=end-1) return;
+        int left=2*i+1;
+        int right=2*i+2;
+        int largest=i;
+        largest=(left < end && nums[largest]<nums[left])?left:largest;
+        largest=(right < end && nums[largest]<nums[right])?right:largest;
+        if(i == largest) return;
+        swap(nums[i],nums[largest]);
+        max_heapify(nums,largest,end);
+    }
+    void build_heap(vector<int> &nums){
+        int i=nums.size()-1;
+        i=(i-1)/2;
+        for(;i>=0;i--){
+            max_heapify(nums,i,nums.size());
+        }
+    }
+    
+ 
+};
