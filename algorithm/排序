@@ -12,6 +12,19 @@ void straight_insert_sort(vector<int> &nums){
 		}
 	}
 }
+void insertion_sort(vector<int> &nums){
+	int i, j;
+	for ( i = 1; i < nums.size(); i++){
+		int tmp = nums[i];
+		for (j = i ; j >= 1;j--){
+			if (nums[j-1] > tmp)
+				nums[j] = nums[j-1];
+			else
+				break;
+		}
+		nums[j] = tmp;
+	}
+}
 
 2.折半插入排序(Binary Insertion Sort):与直接插入排序不同的是，插入动作使用Binary Search（折半查找）
 void binary_insertion_sort(vector<int> &nums){
