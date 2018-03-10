@@ -122,6 +122,22 @@ void quick_sort(vector<int>&nums ,int start,int end){
 	quick_sort(nums, start, i );
 	quick_sort(nums,i + 1, end);
 }
+void quick_sort(vector<int> &nums,int start,int end){
+	if (start >= end - 1) return;
+	int tmp = nums[start];
+	int i = start, j = end - 1;
+	while (i < j){
+		while (i<j && nums[j]>=tmp) j--;
+		if (i == j) break;
+		nums[i++] = nums[j];
+		while (i < j && nums[i] <= tmp) i++;
+		if (i == j) break;
+		nums[j--] = nums[i];
+	}
+	nums[i] = tmp;
+	quick_sort(nums, start, i);
+	quick_sort(nums, i + 1, end);
+}
 三、选择排序
 1.简单选择排序
 步骤：
