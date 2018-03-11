@@ -1,0 +1,56 @@
+class LoopQueue{
+public:
+	LoopQueue(uint64_t buf_size) :read_bytes_(0), write_bytes_(0),buf_size_(buf_size){
+		buf_ = new char[buf_size_];
+		read_pos_ = buf_;
+		write_pos_ = buf_;
+		buf_end_ = buf_ + buf_size_;
+	}
+	~LoopQueue(){
+		delete buf_;
+		buf_ = NULL;
+		read_pos_ = NULL;
+		write_pos_ = NULL;
+		buf_end_ = NULL;
+	}
+	int Read(char *str,uint64_t len);
+	int Write(char *str,uint64_t len);
+private:
+	char *buf_;
+	char *buf_end_;
+	uint64_t buf_size_;
+	volatile char* read_pos_;
+	volatile char* write_pos_;
+	volatile uint64_t read_bytes_;
+	volatile uint64_t write_bytes_;
+	
+};
+int LoopQueue::Read(char *str, uint64_t len){
+	if ( write_bytes_ - read_bytes_ < len) return 0; //读取内容不够长度
+	uint64_t first_read = (len <= buf_end_ - read_pos_ + 1) ? len : (buf_end_ - read_pos_ + 1);
+	uint64_t second_read = len - first_read;
+	memcpy(str, (void *)read_pos_, first_read);
+	read_pos_ += first_read;
+	if (second_read){
+		memcpy(buf_, (str + first_read), second_read);
+		read_pos_ = buf_ + second_read;
+	}
+	read_bytes_ += len;
+	return len;
+	
+}
+int LoopQueue::Write(char *str, uint64_t len){
+	if (write_bytes_ - read_bytes_ + len >buf_size_) return 0;
+	uint64_t first_write = (len <= buf_size_ - write_bytes_ + read_bytes_) ? len : (buf_size_ - write_bytes_ + read_bytes_);
+	uint64_t second_write = len - first_write;
+	memcpy((void *)write_pos_, str, first_write);
+	write_pos_ += first_write;
+	if (second_write){
+		memcpy(buf_, (str + first_write), second_write);
+		write_pos_ = buf_ + second_write;
+	}
+	write_bytes_ += len;
+	return len;
+
+
+}
