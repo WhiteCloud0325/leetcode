@@ -1,0 +1,27 @@
+Difficulty: Easy
+Related Topics: Array, Divide and Conquer, Dynamic Programming
+Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+
+For example, given the array [-2,1,-3,4,-1,2,1,-5,4],
+the contiguous subarray [4,-1,2,1] has the largest sum = 6.
+
+dp=nums[i], if nums[i]>dp[i-1]+nums[i] 说明丢弃前面的子数组，子数组从i开始
+   nums[i]+dp[i-1]                     子数组添加i，但这并不表面当前子数组和最大
+res=max（res，nums[i]）;
+
+Answer:
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        if(nums.empty()) return 0;
+        int n=nums.size();
+        vector<int> dp(n,0);
+        dp[0]=nums[0];
+        int res=nums[0];
+        for(int i=1;i<n;i++){
+            dp[i]=max(nums[i],dp[i-1]+nums[i]);
+            res=max(dp[i],res);
+        }
+        return res;
+    }
+};
