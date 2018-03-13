@@ -14,9 +14,8 @@ Follow up: Could you improve it to O(n log n) time complexity?
 
 
 Answer1:dp[n], dp[i]表示以nums[i]为最后一个字符的最大长度子序列，遍历j从i-1到0,
-dp[i]=max（dp[i],dp[j]）,当nums[i]==nums[j]
-      max(dp[i],dp[j]+1),当nums[i]>nums[j]
-      ,else
+dp[i]=max(dp[i],dp[j]+1),当nums[i]>nums[j]
+      dp[i],else
 
 class Solution {
 public:
