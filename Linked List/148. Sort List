@@ -1,0 +1,36 @@
+Related Topics: Linked List, Sort
+Difficulty: Medium
+Question:
+Sort a linked list in O(n log n) time using constant space complexity.
+
+Answer:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        quickSort(head,NULL);        
+        return head;
+    }
+    void quickSort(ListNode* head,ListNode *end){
+        if(!head || head==end) return;
+        int sentryVal = head->val;
+        ListNode *nodei=head,*nodej=head->next;
+        while(nodej!=end){
+            if(nodej->val < sentryVal){
+                nodei=nodei->next;
+                swap(nodei->val,nodej->val);
+            }
+            nodej=nodej->next;
+        }
+        swap(nodei->val,head->val);
+        quickSort(head,nodei);
+        quickSort(nodei->next,end);
+    }
+};
