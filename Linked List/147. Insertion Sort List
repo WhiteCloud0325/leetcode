@@ -1,0 +1,41 @@
+Related Topics：Linked List, Sort
+Difficulty: Medium
+Question：
+Sort a linked list using insertion sort.
+
+Answer1:添加一个哨兵指针在头指针之前
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        ListNode *sentry=new ListNode(0);
+        sentry->next = head;
+        ListNode *cur=sentry;
+        while(cur->next){
+            ListNode *node=sentry;
+            while(node->next !=cur->next){
+                if(node->next->val < cur->next->val)
+                    node = node->next;
+                else{
+                    ListNode *temp=cur->next;
+                    cur->next = cur->next->next;
+                    temp->next=node->next;
+                    node->next=temp;
+                    break;
+                }
+            }
+            if(node->next == cur->next)
+                cur=cur->next;
+        }
+        head=sentry->next;
+        delete sentry;
+        return head;
+    }
+};
