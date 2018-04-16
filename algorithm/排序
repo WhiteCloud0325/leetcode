@@ -138,6 +138,41 @@ void quick_sort(vector<int> &nums,int start,int end){
 	quick_sort(nums, start, i);
 	quick_sort(nums, i + 1, end);
 }
+
+快排非递归实现：
+int partion(vector<int> &nums, int start, int end){
+	int i = start, j = start + 1;
+	while (j < end){
+		if (nums[j] < nums[start]){
+			++i;
+			swap(nums[i], nums[j]);
+		}
+		++j;
+	}
+	swap(nums[i], nums[start]);
+	return i;
+}
+void quickSort(vector<int> &nums, int start, int end){
+	if (start >= end)
+		return;
+	stack<int> st;
+	st.push(start);
+	st.push(end);
+	while (!st.empty()){
+		int right = st.top();
+		st.pop();
+		int left = st.top();
+		st.pop();
+		if (left < right){
+			int boundary = partion(nums, left, right);
+			st.push(left);
+			st.push(boundary);
+			st.push(boundary + 1);
+			st.push(right);
+		}
+
+	}
+}
 三、选择排序
 1.简单选择排序
 步骤：
