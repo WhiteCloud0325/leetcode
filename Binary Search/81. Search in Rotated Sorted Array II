@@ -1,0 +1,33 @@
+Question:
+Follow up for "Search in Rotated Sorted Array":
+What if duplicates are allowed?
+
+Would this affect the run-time complexity? How and why?
+Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+Write a function to determine if a given target is in the array.
+
+The array may contain duplicates.
+
+Answer:
+class Solution {
+public:
+    bool search(vector<int>& nums, int target) {
+        if(nums.empty()) return false;
+        int left=0,right=nums.size()-1,mid;
+        while(left<right){
+            mid=left+(right-left)/2+1;
+            if(nums[mid]==target) return true;
+            if(mid!=0&&nums[mid]==nums[0]){
+                right=mid-1;
+                continue;
+            }
+            if(nums[0]<=target ^ target<nums[mid] ^ nums[0]<nums[mid]) right=mid-1;
+            else left=mid;
+        }
+        if(nums[right]==target) return true;
+        else    return false;
+    }
+};
