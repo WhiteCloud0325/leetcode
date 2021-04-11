@@ -31,7 +31,7 @@ minStack.getMin();   --> 返回 -2.
 pop、top 和 getMin 操作总是在 非空栈 上调用。
 
 
-方法一：
+方法一：使用辅助栈
 class MinStack {
 public:
     /** initialize your data structure here. */
@@ -62,4 +62,41 @@ public:
     }
     stack<int> st1;
     stack<int> st2;
+};
+
+方法二：不使用辅助栈, minVal存当前最小值, 栈用来存差值, st.push(val - minVal), 要注意越界问题
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+
+    }
+    
+    void push(int val) {
+        if (st.empty()) {
+            minVal = val;
+        }
+
+        st.push((long)val - minVal);
+        minVal = min(minVal ,val);
+    }
+    
+    void pop() {
+        if (st.top() < 0) {
+            minVal -= st.top();
+        }
+        st.pop();
+    }
+    
+    int top() {
+        if (st.top() <= 0) return minVal;
+
+        return st.top() + minVal; 
+    }
+    
+    int getMin() {
+        return minVal;
+    }
+    stack<long> st;
+    int minVal;
 };
