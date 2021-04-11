@@ -63,6 +63,7 @@ void dfs(vector<int> &nums, vector<bool> &use, vector<int> &cur, vector<vector<i
 -10 <= nums[i] <= 10
 
 方法一： 先将数组排个序， 回溯时如果当前数与前一个数相同并且前一个数标识为未使用，这种情况已经统计过，跳过
+原数组排序，保证相同的数字都相邻，然后每次填入的数一定是这个数所在重复数集合中「从左往右第一个未被填过的数字」
 vector<vector<int>> permuteUnique(vector<int>& nums) {
     vector<bool> use(nums.size(), false);
     vector<int> cur;
