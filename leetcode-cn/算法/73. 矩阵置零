@@ -1,0 +1,101 @@
+## 题目
+
+## 答案
+
+
+#### 方法一 使用标记数组
+我们可以用两个标记数组分别记录每一行和每一列是否有零出现。
+
+具体地，我们首先遍历该数组一次，如果某个元素为 00，那么就将该元素所在的行和列所对应标记数组的位置置为 \text{true}true。最后我们再次遍历该数组，用标记数组更新原数组即可。
+
+
+```
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        int row = matrix.size(), col = matrix[0].size();
+        vector<bool> rt(row, false), ct(col, false);
+
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
+                if (matrix[i][j] != 0) continue;
+                rt[i] = true;
+                ct[j] = true;
+            }
+        }
+
+        for (int i = 0; i < row; ++i) {
+            if (rt[i] == false) continue;
+            for (int j = 0; j < col; ++j) {
+                matrix[i][j] = 0;
+            }
+        }
+
+        for (int j = 0; j < col; ++j) {
+            if (ct[j] == false) continue;
+            for (int i = 0; i < row; ++i) {
+                matrix[i][j] = 0;
+            }
+        }
+
+         return;
+    }
+};
+```
+
+#### 方法二 使用两个标记变量
+用矩阵的第一行和第一列代替方法一中的两个标记数组，以达到 O(1)O(1) 的额外空间。但这样会导致原数组的第一行和第一列被修改，无法记录它们是否原本包含 00。因此我们需要额外使用两个标记变量分别记录第一行和第一列是否原本包含0.
+```
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        bool flag_row = false, flag_col = false;
+        int m = matrix.size(), n = matrix[0].size();
+        for (int i = 0; i < m; ++i) {
+            if (matrix[i][0] == 0) {
+                flag_col = true;
+                break;
+            }
+        }
+        for (int j = 0; j < n; ++j) {
+            if (matrix[0][j] == 0) {
+                flag_row = true;
+                break;
+            }
+        }
+
+        for (int i = 1; i < m; ++i) {
+            for (int j = 1; j < n; ++j) {
+                if (matrix[i][j] != 0)  continue;
+
+                matrix[i][0] = 0;
+                matrix[0][j] = 0;
+            }
+        }
+
+        for (int i = 1; i < m; ++i) {
+            if (matrix[i][0] != 0) continue;
+            for (int j = 1; j < n; ++j) {
+                matrix[i][j] = 0;
+            }
+        }
+
+        for (int j = 1; j < n; ++j) {
+            if (matrix[0][j] != 0) continue;
+            for (int i = 1; i < m; ++i) {
+                matrix[i][j] = 0;
+            }
+        }
+
+        if (flag_row) {
+            for (int j = 0; j < n; ++j)
+                matrix[0][j] = 0;
+        }
+
+        if (flag_col) {
+            for (int i = 0; i < m; ++i)
+                matrix[i][0] = 0;
+        }
+    }
+};
+```
