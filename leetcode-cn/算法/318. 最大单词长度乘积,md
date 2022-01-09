@@ -58,4 +58,30 @@ public:
 ```
 
 
-#### 方法二
+#### 方法二 优化位运算， 位运算 + hash，记录每个掩码的最大字符串长度
+```
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        int n = words.size();
+        unordered_map<int, int> table;
+        for (auto word: words) {
+            int val = 0;
+            for (auto ch: word) {
+                val |= 1 << (ch - 'a');
+            }
+            table[val] = max(table[val], (int)word.size());
+        }
+
+        int res = 0;
+        for (auto it1 = table.begin(); it1  != table.end(); ++it1) {
+            for (auto it2 = table.begin(); it2 != table.end(); ++it2) {
+                if (it1->first & it2->first) continue;
+                res = max(res, it1->second * it2->second);
+            }
+        }
+        return res;
+
+    }
+};
+```
